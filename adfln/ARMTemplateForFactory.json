@@ -597,13 +597,7 @@
 				"type": "AzureBlob",
 				"typeProperties": {
 					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
+						"type": "ParquetFormat"
 					},
 					"fileName": {
 						"value": "[parameters('DestinationDataset_y4j_properties_typeProperties_fileName')]",

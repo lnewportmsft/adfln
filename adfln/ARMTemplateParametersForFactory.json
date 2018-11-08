@@ -1,0 +1,114 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfln"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"MyAzureBlobLinkedService_connectionString": {
+			"value": ""
+		},
+		"MyDataBricksLinkedService_accessToken": {
+			"value": ""
+		},
+		"CADOutput_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"CADOutput_properties_typeProperties_folderPath": {
+			"value": "demo/output/currency"
+		},
+		"CurrencyDatasetCAD_properties_typeProperties_fileName": {
+			"value": "Currency_CAD.txt"
+		},
+		"CurrencyDatasetCAD_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
+		"CurrencyDatasetUSD_properties_typeProperties_fileName": {
+			"value": "Currency_USD.txt"
+		},
+		"CurrencyDatasetUSD_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
+		"DestinationDataset_ael_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationDataset_ael_properties_typeProperties_folderPath": {
+			"value": "raw"
+		},
+		"DestinationDataset_dia_properties_typeProperties_fileName": {
+			"value": "moviesout.csv"
+		},
+		"DestinationDataset_dia_properties_typeProperties_folderPath": {
+			"value": "@concat('demo/movie_sink/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"DestinationDataset_y4j_properties_typeProperties_fileName": {
+			"value": "@dataset().cw_fileName"
+		},
+		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
+			"value": "raw"
+		},
+		"SourceDataset_dia_properties_typeProperties_fileName": {
+			"value": "movies.csv"
+		},
+		"SourceDataset_dia_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
+		"SourceDataset_unp_properties_typeProperties_fileName": {
+			"value": "SupplyChain_XA_Files.csv"
+		},
+		"SourceDataset_unp_properties_typeProperties_folderPath": {
+			"value": "raw"
+		},
+		"TaxiDemoDayStatsSink_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"TaxiDemoDayStatsSink_properties_typeProperties_folderPath": {
+			"value": "demo/day_stats"
+		},
+		"TaxiDemoTotalByPaymentType_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"TaxiDemoTotalByPaymentType_properties_typeProperties_folderPath": {
+			"value": "demo/total_by_paymenttype"
+		},
+		"TaxiDemoVendorStatsSink_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"TaxiDemoVendorStatsSink_properties_typeProperties_folderPath": {
+			"value": "demo/vendor_stats"
+		},
+		"USDOutput_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"USDOutput_properties_typeProperties_folderPath": {
+			"value": "demo/output/currency"
+		},
+		"movie_dataflow_sink_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"movie_dataflow_sink_properties_typeProperties_folderPath": {
+			"value": "demo/movie_sink"
+		},
+		"movie_dataflow_source_properties_typeProperties_fileName": {
+			"value": "movies.csv"
+		},
+		"movie_dataflow_source_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
+		"taxi_trip_data_input_properties_typeProperties_fileName": {
+			"value": "trip_data_1.csv"
+		},
+		"taxi_trip_data_input_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
+		"taxi_trip_fare_input_properties_typeProperties_fileName": {
+			"value": "trip_fare_1.csv"
+		},
+		"taxi_trip_fare_input_properties_typeProperties_folderPath": {
+			"value": "demo"
+		}
+	}
+}

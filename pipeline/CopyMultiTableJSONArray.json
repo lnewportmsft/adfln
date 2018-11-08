@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach_y4j",
+				"name": "ForEachTableInArray",
 				"type": "ForEach",
 				"typeProperties": {
 					"items": {

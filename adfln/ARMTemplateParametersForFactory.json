@@ -48,7 +48,7 @@
 			"value": "@dataset().cw_fileName"
 		},
 		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
-			"value": "raw"
+			"value": "@concat('raw/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
 		},
 		"SourceDataset_dia_properties_typeProperties_fileName": {
 			"value": "movies.csv"

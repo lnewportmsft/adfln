@@ -1,5 +1,5 @@
 {
-	"name": "CopyPipeline_y4j",
+	"name": "CopyMultiTableJSONArray",
 	"properties": {
 		"activities": [
 			{

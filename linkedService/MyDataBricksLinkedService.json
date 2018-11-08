@@ -1,0 +1,13 @@
+{
+	"name": "MyDataBricksLinkedService",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Replace with the valid credential before running data flow job.",
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://eastus2.azuredatabricks.net",
+			"existingClusterId": "1017-161213-bawl338",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkFERkxOX2Q3ZWQ5ZGVlLTIxYTItNDA1NC1iNGY0LWM2YWE4ODgyNmRkZCINCn0="
+		}
+	}
+}

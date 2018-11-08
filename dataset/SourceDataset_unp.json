@@ -1,0 +1,39 @@
+{
+	"name": "SourceDataset_unp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MyAzureBlobLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Env",
+				"type": "Int64"
+			},
+			{
+				"name": "LibraryName",
+				"type": "String"
+			},
+			{
+				"name": "ObjectName",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": "SupplyChain_XA_Files.csv",
+			"folderPath": "raw"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

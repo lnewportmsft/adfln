@@ -1,0 +1,12 @@
+{
+	"name": "MyAzureBlobLinkedService",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Replace with the valid credential before running data flow job.",
+		"type": "AzureStorage",
+		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=lgnstorage;",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkFERkxOXzZmNTY5NGFkLWRhM2EtNDY4ZC1hYTg4LTE0Y2JhOGRlYjg5YSINCn0="
+		}
+	}
+}

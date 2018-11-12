@@ -9,7 +9,7 @@
 					"type": "DatasetReference"
 				},
 				"name": "Movies",
-				"script": "source(output(movieId as string,title as string,genres as string),allowSchemaDrift: true,validateSchema: false) ~> Movies"
+				"script": "source(output(movieId as string,title as string,genres as string),allowSchemaDrift: false,validateSchema: false) ~> Movies"
 			}
 		],
 		"sinks": [

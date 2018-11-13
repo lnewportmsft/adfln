@@ -71,6 +71,12 @@
 		"MoviesDBDataset_properties_typeProperties_folderPath": {
 			"value": "demo"
 		},
+		"SinkDataset_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
+		},
+		"SinkDataset_properties_typeProperties_folderPath": {
+			"value": "adftutorial/incrementalcopy"
+		},
 		"SourceDataset_dia_properties_typeProperties_fileName": {
 			"value": "movies.csv"
 		},

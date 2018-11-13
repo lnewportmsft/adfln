@@ -5,7 +5,13 @@
 		"factoryName": {
 			"value": "adfln"
 		},
+		"AzureSqlDWLinkedService_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseLinkedService_connectionString": {
 			"value": ""
 		},
 		"MyAzureBlobLinkedService_connectionString": {
@@ -13,6 +19,15 @@
 		},
 		"MyDataBricksLinkedService_accessToken": {
 			"value": ""
+		},
+		"SharePointOData_password": {
+			"value": ""
+		},
+		"AzureBlob1_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"AzureBlob1_properties_typeProperties_folderPath": {
+			"value": "demo/cleanmovie"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"value": ""
@@ -49,6 +64,12 @@
 		},
 		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
 			"value": "@concat('raw/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"MoviesDBDataset_properties_typeProperties_fileName": {
+			"value": "moviesDB.csv"
+		},
+		"MoviesDBDataset_properties_typeProperties_folderPath": {
+			"value": "demo"
 		},
 		"SourceDataset_dia_properties_typeProperties_fileName": {
 			"value": "movies.csv"
@@ -109,6 +130,12 @@
 		},
 		"taxi_trip_fare_input_properties_typeProperties_folderPath": {
 			"value": "demo"
+		},
+		"SharePointOData_properties_typeProperties_url": {
+			"value": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"
+		},
+		"SharePointOData_properties_typeProperties_userName": {
+			"value": "lnewport"
 		}
 	}
 }

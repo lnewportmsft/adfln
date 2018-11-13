@@ -7,9 +7,17 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "adfln"
 		},
+		"AzureSqlDWLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDWLinkedService'"
+		},
 		"AzureSqlDatabase1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureSqlDatabaseLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService'"
 		},
 		"MyAzureBlobLinkedService_connectionString": {
 			"type": "secureString",
@@ -18,6 +26,18 @@
 		"MyDataBricksLinkedService_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'MyDataBricksLinkedService'"
+		},
+		"SharePointOData_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SharePointOData'"
+		},
+		"AzureBlob1_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlob1_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/cleanmovie"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"type": "string",
@@ -66,6 +86,14 @@
 		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('raw/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"MoviesDBDataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "moviesDB.csv"
+		},
+		"MoviesDBDataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
 		},
 		"SourceDataset_dia_properties_typeProperties_fileName": {
 			"type": "string",
@@ -146,6 +174,14 @@
 		"taxi_trip_fare_input_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "demo"
+		},
+		"SharePointOData_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"
+		},
+		"SharePointOData_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "lnewport"
 		}
 	},
 	"variables": {
@@ -363,6 +399,81 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/TaxiDemo')]",
 				"[concat(variables('factoryId'), '/linkedServices/MyDataBricksLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlob1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MyAzureBlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": "[parameters('AzureBlob1_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('AzureBlob1_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MyAzureBlobLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDWDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDWLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"DWTableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().DWTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDWLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {
+					"tableName": "dummyName"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabaseLinkedService')]"
 			]
 		},
 		{
@@ -607,6 +718,62 @@
 						"value": "[parameters('DestinationDataset_y4j_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MyAzureBlobLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MoviesDBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MyAzureBlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": "[parameters('MoviesDBDataset_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('MoviesDBDataset_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [
@@ -921,6 +1088,7 @@
 						"type": "TextFormat",
 						"columnDelimiter": ",",
 						"rowDelimiter": "",
+						"quoteChar": "\"",
 						"nullValue": "\\N",
 						"treatEmptyAsNull": true,
 						"skipLineCount": 0,
@@ -1097,6 +1265,19 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDWLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDWLinkedService_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-07-01-preview",
@@ -1105,6 +1286,19 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabaseLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabaseLinkedService_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -1138,6 +1332,25 @@
 						"value": "[parameters('MyDataBricksLinkedService_accessToken')]"
 					},
 					"existingClusterId": "1017-161213-bawl338"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SharePointOData')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "OData",
+				"typeProperties": {
+					"url": "[parameters('SharePointOData_properties_typeProperties_url')]",
+					"authenticationType": "Basic",
+					"userName": "[parameters('SharePointOData_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SharePointOData_password')]"
+					}
 				}
 			},
 			"dependsOn": []

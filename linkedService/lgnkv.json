@@ -1,0 +1,9 @@
+{
+	"name": "lgnkv",
+	"properties": {
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://lgnkv.vault.azure.net/"
+		}
+	}
+}

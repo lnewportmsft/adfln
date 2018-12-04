@@ -7,6 +7,11 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "adfln"
 		},
+		"integrationRuntime_integrationRuntime1": {
+			"type": "string",
+			"metadata": "Integration Runtime Name",
+			"defaultValue": "integrationRuntime1"
+		},
 		"AzureSqlDWLinkedService_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDWLinkedService'"
@@ -328,6 +333,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -688,6 +696,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -725,6 +736,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1757,6 +1771,16 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/', parameters('integrationRuntime_integrationRuntime1'))]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Currency Converter')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-07-01-preview",
@@ -1769,7 +1793,8 @@
 							"type": "DatasetReference"
 						},
 						"name": "USDCurrency",
-						"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: false,validateSchema: false) ~> USDCurrency"
+						"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: false,validateSchema: false) ~> USDCurrency",
+						"typeProperties": {}
 					},
 					{
 						"dataset": {
@@ -1777,7 +1802,8 @@
 							"type": "DatasetReference"
 						},
 						"name": "CADSource",
-						"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: true,validateSchema: false) ~> CADSource"
+						"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: true,validateSchema: false) ~> CADSource",
+						"typeProperties": {}
 					}
 				],
 				"sinks": [
@@ -1837,7 +1863,8 @@
 							"type": "DatasetReference"
 						},
 						"name": "Movies",
-						"script": "source(output(movieId as string,title as string,genres as string),allowSchemaDrift: true,validateSchema: false) ~> Movies"
+						"script": "source(output(movieId as string,title as string,genres as string),allowSchemaDrift: true,validateSchema: false) ~> Movies",
+						"typeProperties": {}
 					}
 				],
 				"sinks": [
@@ -1876,7 +1903,8 @@
 							"type": "DatasetReference"
 						},
 						"name": "TripData",
-						"script": "source(output(medallion as string,hack_license as string,vendor_id as string,rate_code as string,store_and_fwd_flag as string,pickup_datetime as string,dropoff_datetime as string,passenger_count as short,trip_time_in_secs as long,trip_distance as double,pickup_longitude as double,pickup_latitude as double,dropoff_longitude as double,dropoff_latitude as double),allowSchemaDrift: false,validateSchema: false) ~> TripData"
+						"script": "source(output(medallion as string,hack_license as string,vendor_id as string,rate_code as string,store_and_fwd_flag as string,pickup_datetime as string,dropoff_datetime as string,passenger_count as short,trip_time_in_secs as long,trip_distance as double,pickup_longitude as double,pickup_latitude as double,dropoff_longitude as double,dropoff_latitude as double),allowSchemaDrift: false,validateSchema: false) ~> TripData",
+						"typeProperties": {}
 					},
 					{
 						"dataset": {
@@ -1884,7 +1912,8 @@
 							"type": "DatasetReference"
 						},
 						"name": "TripFare",
-						"script": "source(output(medallion as string,{ hack_license} as string,{ vendor_id} as string,{ pickup_datetime} as string,{ payment_type} as string,{ fare_amount} as double,{ surcharge} as double,{ mta_tax} as double,{ tip_amount} as double,{ tolls_amount} as double,{ total_amount} as double),allowSchemaDrift: false,validateSchema: false) ~> TripFare"
+						"script": "source(output(medallion as string,{ hack_license} as string,{ vendor_id} as string,{ pickup_datetime} as string,{ payment_type} as string,{ fare_amount} as double,{ surcharge} as double,{ mta_tax} as double,{ tip_amount} as double,{ tolls_amount} as double,{ total_amount} as double),allowSchemaDrift: false,validateSchema: false) ~> TripFare",
+						"typeProperties": {}
 					}
 				],
 				"sinks": [

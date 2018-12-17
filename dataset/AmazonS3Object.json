@@ -1,0 +1,22 @@
+{
+	"name": "AmazonS3Object",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AmazonS3Source",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AmazonS3Object",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"bucketName": ""
+		}
+	}
+}

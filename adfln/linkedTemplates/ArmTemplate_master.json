@@ -1,0 +1,461 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "adfln"
+		},
+		"integrationRuntime_integrationRuntime1": {
+			"type": "string",
+			"metadata": "Integration Runtime Name",
+			"defaultValue": "integrationRuntime1"
+		},
+		"AmazonS3Source_secretAccessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS3Source'"
+		},
+		"AzureBlobSH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobSH'"
+		},
+		"AzureSqlDWLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDWLinkedService'"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"AzureSqlDatabaseLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabaseLinkedService'"
+		},
+		"MyAzureBlobLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MyAzureBlobLinkedService'"
+		},
+		"MyDataBricksLinkedService_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'MyDataBricksLinkedService'"
+		},
+		"SharePointOData_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SharePointOData'"
+		},
+		"AzureBlob1_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlob1_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/cleanmovie"
+		},
+		"AzureBlobSH_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlobSH_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "nyctaxi"
+		},
+		"AzureBlobTaxi_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"AzureBlobTaxi_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "nyctaxi"
+		},
+		"CADOutput_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"CADOutput_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/output/currency"
+		},
+		"CurrencyDatasetCAD_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "Currency_CAD.txt"
+		},
+		"CurrencyDatasetCAD_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"CurrencyDatasetUSD_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "Currency_USD.txt"
+		},
+		"CurrencyDatasetUSD_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"DestinationDataset_ael_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"DestinationDataset_ael_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "raw"
+		},
+		"DestinationDataset_dia_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "moviesout.csv"
+		},
+		"DestinationDataset_dia_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('demo/movie_sink/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"DestinationDataset_y4j_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().cw_fileName"
+		},
+		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('raw/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"MoviesDBDataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "moviesDB.csv"
+		},
+		"MoviesDBDataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"SinkDataset_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
+		},
+		"SinkDataset_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "adftutorial/incrementalcopy"
+		},
+		"SourceDataset_dia_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "movies.csv"
+		},
+		"SourceDataset_dia_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"SourceDataset_unp_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "SupplyChain_XA_Files.csv"
+		},
+		"SourceDataset_unp_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "raw"
+		},
+		"TaxiDemoDayStatsSink_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"TaxiDemoDayStatsSink_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/day_stats"
+		},
+		"TaxiDemoTotalByPaymentType_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"TaxiDemoTotalByPaymentType_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/total_by_paymenttype"
+		},
+		"TaxiDemoVendorStatsSink_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"TaxiDemoVendorStatsSink_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/vendor_stats"
+		},
+		"USDOutput_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"USDOutput_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/output/currency"
+		},
+		"movie_dataflow_sink_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"movie_dataflow_sink_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo/movie_sink"
+		},
+		"movie_dataflow_source_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "movies.csv"
+		},
+		"movie_dataflow_source_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"taxi_trip_data_input_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "trip_data_1.csv"
+		},
+		"taxi_trip_data_input_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"taxi_trip_fare_input_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "trip_fare_1.csv"
+		},
+		"taxi_trip_fare_input_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "demo"
+		},
+		"AmazonS3Source_properties_typeProperties_accessKeyId": {
+			"type": "string",
+			"defaultValue": "AKIAJHJOC6ITSHA22RGQ"
+		},
+		"SharePointOData_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"
+		},
+		"SharePointOData_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "lnewport"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas Token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"integrationRuntime_integrationRuntime1": {
+						"value": "[parameters('integrationRuntime_integrationRuntime1')]"
+					},
+					"AmazonS3Source_secretAccessKey": {
+						"value": "[parameters('AmazonS3Source_secretAccessKey')]"
+					},
+					"AzureBlobSH_connectionString": {
+						"value": "[parameters('AzureBlobSH_connectionString')]"
+					},
+					"AzureSqlDWLinkedService_connectionString": {
+						"value": "[parameters('AzureSqlDWLinkedService_connectionString')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"AzureSqlDatabaseLinkedService_connectionString": {
+						"value": "[parameters('AzureSqlDatabaseLinkedService_connectionString')]"
+					},
+					"MyAzureBlobLinkedService_connectionString": {
+						"value": "[parameters('MyAzureBlobLinkedService_connectionString')]"
+					},
+					"MyDataBricksLinkedService_accessToken": {
+						"value": "[parameters('MyDataBricksLinkedService_accessToken')]"
+					},
+					"SharePointOData_password": {
+						"value": "[parameters('SharePointOData_password')]"
+					},
+					"AmazonS3Source_properties_typeProperties_accessKeyId": {
+						"value": "[parameters('AmazonS3Source_properties_typeProperties_accessKeyId')]"
+					},
+					"SharePointOData_properties_typeProperties_url": {
+						"value": "[parameters('SharePointOData_properties_typeProperties_url')]"
+					},
+					"SharePointOData_properties_typeProperties_userName": {
+						"value": "[parameters('SharePointOData_properties_typeProperties_userName')]"
+					},
+					"AzureBlob1_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlob1_properties_typeProperties_fileName')]"
+					},
+					"AzureBlob1_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlob1_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlobSH_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlobSH_properties_typeProperties_fileName')]"
+					},
+					"AzureBlobSH_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlobSH_properties_typeProperties_folderPath')]"
+					},
+					"AzureBlobTaxi_properties_typeProperties_fileName": {
+						"value": "[parameters('AzureBlobTaxi_properties_typeProperties_fileName')]"
+					},
+					"AzureBlobTaxi_properties_typeProperties_folderPath": {
+						"value": "[parameters('AzureBlobTaxi_properties_typeProperties_folderPath')]"
+					},
+					"CADOutput_properties_typeProperties_fileName": {
+						"value": "[parameters('CADOutput_properties_typeProperties_fileName')]"
+					},
+					"CADOutput_properties_typeProperties_folderPath": {
+						"value": "[parameters('CADOutput_properties_typeProperties_folderPath')]"
+					},
+					"CurrencyDatasetCAD_properties_typeProperties_fileName": {
+						"value": "[parameters('CurrencyDatasetCAD_properties_typeProperties_fileName')]"
+					},
+					"CurrencyDatasetCAD_properties_typeProperties_folderPath": {
+						"value": "[parameters('CurrencyDatasetCAD_properties_typeProperties_folderPath')]"
+					},
+					"CurrencyDatasetUSD_properties_typeProperties_fileName": {
+						"value": "[parameters('CurrencyDatasetUSD_properties_typeProperties_fileName')]"
+					},
+					"CurrencyDatasetUSD_properties_typeProperties_folderPath": {
+						"value": "[parameters('CurrencyDatasetUSD_properties_typeProperties_folderPath')]"
+					},
+					"DestinationDataset_ael_properties_typeProperties_fileName": {
+						"value": "[parameters('DestinationDataset_ael_properties_typeProperties_fileName')]"
+					},
+					"DestinationDataset_ael_properties_typeProperties_folderPath": {
+						"value": "[parameters('DestinationDataset_ael_properties_typeProperties_folderPath')]"
+					},
+					"DestinationDataset_dia_properties_typeProperties_fileName": {
+						"value": "[parameters('DestinationDataset_dia_properties_typeProperties_fileName')]"
+					},
+					"DestinationDataset_dia_properties_typeProperties_folderPath": {
+						"value": "[parameters('DestinationDataset_dia_properties_typeProperties_folderPath')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"DestinationDataset_y4j_properties_typeProperties_fileName": {
+						"value": "[parameters('DestinationDataset_y4j_properties_typeProperties_fileName')]"
+					},
+					"DestinationDataset_y4j_properties_typeProperties_folderPath": {
+						"value": "[parameters('DestinationDataset_y4j_properties_typeProperties_folderPath')]"
+					},
+					"MoviesDBDataset_properties_typeProperties_fileName": {
+						"value": "[parameters('MoviesDBDataset_properties_typeProperties_fileName')]"
+					},
+					"MoviesDBDataset_properties_typeProperties_folderPath": {
+						"value": "[parameters('MoviesDBDataset_properties_typeProperties_folderPath')]"
+					},
+					"SinkDataset_properties_typeProperties_fileName": {
+						"value": "[parameters('SinkDataset_properties_typeProperties_fileName')]"
+					},
+					"SinkDataset_properties_typeProperties_folderPath": {
+						"value": "[parameters('SinkDataset_properties_typeProperties_folderPath')]"
+					},
+					"SourceDataset_dia_properties_typeProperties_fileName": {
+						"value": "[parameters('SourceDataset_dia_properties_typeProperties_fileName')]"
+					},
+					"SourceDataset_dia_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_dia_properties_typeProperties_folderPath')]"
+					},
+					"SourceDataset_unp_properties_typeProperties_fileName": {
+						"value": "[parameters('SourceDataset_unp_properties_typeProperties_fileName')]"
+					},
+					"SourceDataset_unp_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_unp_properties_typeProperties_folderPath')]"
+					},
+					"TaxiDemoDayStatsSink_properties_typeProperties_fileName": {
+						"value": "[parameters('TaxiDemoDayStatsSink_properties_typeProperties_fileName')]"
+					},
+					"TaxiDemoDayStatsSink_properties_typeProperties_folderPath": {
+						"value": "[parameters('TaxiDemoDayStatsSink_properties_typeProperties_folderPath')]"
+					},
+					"TaxiDemoTotalByPaymentType_properties_typeProperties_fileName": {
+						"value": "[parameters('TaxiDemoTotalByPaymentType_properties_typeProperties_fileName')]"
+					},
+					"TaxiDemoTotalByPaymentType_properties_typeProperties_folderPath": {
+						"value": "[parameters('TaxiDemoTotalByPaymentType_properties_typeProperties_folderPath')]"
+					},
+					"TaxiDemoVendorStatsSink_properties_typeProperties_fileName": {
+						"value": "[parameters('TaxiDemoVendorStatsSink_properties_typeProperties_fileName')]"
+					},
+					"TaxiDemoVendorStatsSink_properties_typeProperties_folderPath": {
+						"value": "[parameters('TaxiDemoVendorStatsSink_properties_typeProperties_folderPath')]"
+					},
+					"USDOutput_properties_typeProperties_fileName": {
+						"value": "[parameters('USDOutput_properties_typeProperties_fileName')]"
+					},
+					"USDOutput_properties_typeProperties_folderPath": {
+						"value": "[parameters('USDOutput_properties_typeProperties_folderPath')]"
+					},
+					"movie_dataflow_sink_properties_typeProperties_fileName": {
+						"value": "[parameters('movie_dataflow_sink_properties_typeProperties_fileName')]"
+					},
+					"movie_dataflow_sink_properties_typeProperties_folderPath": {
+						"value": "[parameters('movie_dataflow_sink_properties_typeProperties_folderPath')]"
+					},
+					"movie_dataflow_source_properties_typeProperties_fileName": {
+						"value": "[parameters('movie_dataflow_source_properties_typeProperties_fileName')]"
+					},
+					"movie_dataflow_source_properties_typeProperties_folderPath": {
+						"value": "[parameters('movie_dataflow_source_properties_typeProperties_folderPath')]"
+					},
+					"taxi_trip_data_input_properties_typeProperties_fileName": {
+						"value": "[parameters('taxi_trip_data_input_properties_typeProperties_fileName')]"
+					},
+					"taxi_trip_data_input_properties_typeProperties_folderPath": {
+						"value": "[parameters('taxi_trip_data_input_properties_typeProperties_folderPath')]"
+					},
+					"taxi_trip_fare_input_properties_typeProperties_fileName": {
+						"value": "[parameters('taxi_trip_fare_input_properties_typeProperties_fileName')]"
+					},
+					"taxi_trip_fare_input_properties_typeProperties_folderPath": {
+						"value": "[parameters('taxi_trip_fare_input_properties_typeProperties_folderPath')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_1')]"
+			]
+		}
+	]
+}

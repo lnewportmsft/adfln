@@ -16,8 +16,8 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": false
 			},
-			"fileName": "",
-			"folderPath": "nyctaxi"
+			"fileName": "yellow_tripdata_2016-01.csv",
+			"folderPath": "nyctaxi/2016"
 		}
 	}
 }

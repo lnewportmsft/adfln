@@ -1,5 +1,5 @@
 {
-	"name": "RunExe",
+	"name": "RunExeInBatch",
 	"properties": {
 		"activities": [
 			{

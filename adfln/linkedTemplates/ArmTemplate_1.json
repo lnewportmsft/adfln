@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "adfln"
 		},
+		"AzureBatch_accessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessKey' of 'AzureBatch'"
+		},
 		"DestinationDataset_y4j_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@dataset().cw_fileName"
@@ -110,6 +114,14 @@
 		"taxi_trip_fare_input_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "demo"
+		},
+		"AzureBatch_properties_typeProperties_accountName": {
+			"type": "string",
+			"defaultValue": "lnbatch"
+		},
+		"AzureBatch_properties_typeProperties_batchUri": {
+			"type": "string",
+			"defaultValue": "https://lnbatch.eastus2.batch.azure.com"
 		}
 	},
 	"variables": {
@@ -758,6 +770,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureBatch')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBatch",
+				"typeProperties": {
+					"accountName": "[parameters('AzureBatch_properties_typeProperties_accountName')]",
+					"accessKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureBatch_accessKey')]"
+					},
+					"batchUri": "[parameters('AzureBatch_properties_typeProperties_batchUri')]",
+					"poolName": "lnbatchpool",
+					"linkedServiceName": {
+						"referenceName": "MyAzureBlobLinkedService",
+						"type": "LinkedServiceReference"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyMultiTableJSONArray')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-07-01-preview",
@@ -858,55 +893,6 @@
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_y4j')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_y4j')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopyTaxi')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-07-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "AzureBlobSH",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AzureBlobTaxi",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": []
 		}
 	]
 }

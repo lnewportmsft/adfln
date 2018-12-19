@@ -11,6 +11,9 @@
 		"AmazonS3Source_secretAccessKey": {
 			"value": ""
 		},
+		"AzureBatch_accessKey": {
+			"value": ""
+		},
 		"AzureBlobSH_connectionString": {
 			"value": ""
 		},
@@ -45,10 +48,10 @@
 			"value": "nyctaxi"
 		},
 		"AzureBlobTaxi_properties_typeProperties_fileName": {
-			"value": ""
+			"value": "yellow_tripdata_2016-01.csv"
 		},
 		"AzureBlobTaxi_properties_typeProperties_folderPath": {
-			"value": "nyctaxi"
+			"value": "nyctaxi/2016"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"value": ""
@@ -160,6 +163,12 @@
 		},
 		"AmazonS3Source_properties_typeProperties_accessKeyId": {
 			"value": "AKIAJHJOC6ITSHA22RGQ"
+		},
+		"AzureBatch_properties_typeProperties_accountName": {
+			"value": "lnbatch"
+		},
+		"AzureBatch_properties_typeProperties_batchUri": {
+			"value": "https://lnbatch.eastus2.batch.azure.com"
 		},
 		"SharePointOData_properties_typeProperties_url": {
 			"value": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"

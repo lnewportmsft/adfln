@@ -74,11 +74,11 @@
 		},
 		"AzureBlobTaxi_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": ""
+			"defaultValue": "yellow_tripdata_2016-01.csv"
 		},
 		"AzureBlobTaxi_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "nyctaxi"
+			"defaultValue": "nyctaxi/2016"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"type": "string",
@@ -353,6 +353,84 @@
 				},
 				"annotations": [],
 				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Prop_0",
+						"type": "String"
+					},
+					{
+						"name": "Prop_1",
+						"type": "String"
+					},
+					{
+						"name": "Prop_2",
+						"type": "String"
+					},
+					{
+						"name": "Prop_3",
+						"type": "String"
+					},
+					{
+						"name": "Prop_4",
+						"type": "String"
+					},
+					{
+						"name": "Prop_5",
+						"type": "String"
+					},
+					{
+						"name": "Prop_6",
+						"type": "String"
+					},
+					{
+						"name": "Prop_7",
+						"type": "String"
+					},
+					{
+						"name": "Prop_8",
+						"type": "String"
+					},
+					{
+						"name": "Prop_9",
+						"type": "String"
+					},
+					{
+						"name": "Prop_10",
+						"type": "String"
+					},
+					{
+						"name": "Prop_11",
+						"type": "String"
+					},
+					{
+						"name": "Prop_12",
+						"type": "String"
+					},
+					{
+						"name": "Prop_13",
+						"type": "String"
+					},
+					{
+						"name": "Prop_14",
+						"type": "String"
+					},
+					{
+						"name": "Prop_15",
+						"type": "String"
+					},
+					{
+						"name": "Prop_16",
+						"type": "String"
+					},
+					{
+						"name": "Prop_17",
+						"type": "String"
+					},
+					{
+						"name": "Prop_18",
+						"type": "String"
+					}
+				],
 				"typeProperties": {
 					"format": {
 						"type": "TextFormat",
@@ -361,7 +439,7 @@
 						"nullValue": "\\N",
 						"treatEmptyAsNull": true,
 						"skipLineCount": 0,
-						"firstRowAsHeader": false
+						"firstRowAsHeader": true
 					},
 					"fileName": "[parameters('AzureBlobTaxi_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('AzureBlobTaxi_properties_typeProperties_folderPath')]"

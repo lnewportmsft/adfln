@@ -16,6 +16,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'secretAccessKey' of 'AmazonS3Source'"
 		},
+		"AzureBatch_accessKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessKey' of 'AzureBatch'"
+		},
 		"AzureBlobSH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobSH'"
@@ -62,11 +66,11 @@
 		},
 		"AzureBlobTaxi_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": ""
+			"defaultValue": "yellow_tripdata_2016-01.csv"
 		},
 		"AzureBlobTaxi_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "nyctaxi"
+			"defaultValue": "nyctaxi/2016"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"type": "string",
@@ -216,6 +220,14 @@
 			"type": "string",
 			"defaultValue": "AKIAJHJOC6ITSHA22RGQ"
 		},
+		"AzureBatch_properties_typeProperties_accountName": {
+			"type": "string",
+			"defaultValue": "lnbatch"
+		},
+		"AzureBatch_properties_typeProperties_batchUri": {
+			"type": "string",
+			"defaultValue": "https://lnbatch.eastus2.batch.azure.com"
+		},
 		"SharePointOData_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"
@@ -353,6 +365,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureBatch_accessKey": {
+						"value": "[parameters('AzureBatch_accessKey')]"
+					},
 					"DestinationDataset_y4j_properties_typeProperties_fileName": {
 						"value": "[parameters('DestinationDataset_y4j_properties_typeProperties_fileName')]"
 					},
@@ -430,6 +445,12 @@
 					},
 					"taxi_trip_fare_input_properties_typeProperties_folderPath": {
 						"value": "[parameters('taxi_trip_fare_input_properties_typeProperties_folderPath')]"
+					},
+					"AzureBatch_properties_typeProperties_accountName": {
+						"value": "[parameters('AzureBatch_properties_typeProperties_accountName')]"
+					},
+					"AzureBatch_properties_typeProperties_batchUri": {
+						"value": "[parameters('AzureBatch_properties_typeProperties_batchUri')]"
 					}
 				}
 			},

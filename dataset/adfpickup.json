@@ -15,7 +15,8 @@
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
 				"firstRowAsHeader": false
-			}
+			},
+			"fileName": "*.jpg"
 		}
 	}
 }

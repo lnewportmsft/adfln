@@ -1,0 +1,9 @@
+{
+	"name": "LNAKV",
+	"properties": {
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://lnakv.vault.azure.net/"
+		}
+	}
+}

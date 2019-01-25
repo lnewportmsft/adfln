@@ -1,11 +1,11 @@
 {
-	"name": "SinkDataset",
+	"name": "DestinationDataset_xps",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "MyAzureBlobLinkedService",
+			"referenceName": "adlsgen2",
 			"type": "LinkedServiceReference"
 		},
-		"type": "AzureBlob",
+		"type": "AzureBlobFSFile",
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
@@ -14,13 +14,10 @@
 				"nullValue": "\\N",
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
-				"firstRowAsHeader": false
+				"firstRowAsHeader": true
 			},
-			"fileName": {
-				"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
-				"type": "Expression"
-			},
-			"folderPath": "adftutorial/incrementalcopy"
+			"fileName": "",
+			"folderPath": "copyfromsql2"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

@@ -9,7 +9,7 @@
 					"type": "DatasetReference"
 				},
 				"name": "USDCurrency",
-				"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: false,validateSchema: false) ~> USDCurrency"
+				"script": "source(output(\n\t\tPreviousConversionRate as double,\n\t\tCountry as string,\n\t\tDateTime1 as string,\n\t\tCurrentConversionRate as double\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> USDCurrency"
 			},
 			{
 				"dataset": {
@@ -17,7 +17,7 @@
 					"type": "DatasetReference"
 				},
 				"name": "CADSource",
-				"script": "source(output(PreviousConversionRate as double,Country as string,DateTime1 as string,CurrentConversionRate as double),allowSchemaDrift: true,validateSchema: false) ~> CADSource"
+				"script": "source(output(\n\t\tPreviousConversionRate as double,\n\t\tCountry as string,\n\t\tDateTime1 as string,\n\t\tCurrentConversionRate as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CADSource"
 			}
 		],
 		"sinks": [
@@ -27,7 +27,7 @@
 					"type": "DatasetReference"
 				},
 				"name": "USDSink",
-				"script": "ConditionalSplit1@USD sink(saveMode:'overwrite' ) ~> USDSink"
+				"script": "ConditionalSplit1@USD sink(saveMode:'overwrite') ~> USDSink"
 			},
 			{
 				"dataset": {
@@ -35,7 +35,7 @@
 					"type": "DatasetReference"
 				},
 				"name": "CADSink",
-				"script": "ConditionalSplit1@CAD sink(saveMode:'overwrite' ) ~> CADSink"
+				"script": "ConditionalSplit1@CAD sink(saveMode:'overwrite') ~> CADSink"
 			}
 		],
 		"transformations": [
@@ -52,7 +52,7 @@
 			{
 				"name": "ConditionalSplit1",
 				"description": "Split the data on state to create 2 streams",
-				"script": "NewCurrencyColumn split(Country == 'USD',Country == 'CAD',disjoint: false) ~> ConditionalSplit1@(USD, CAD)"
+				"script": "NewCurrencyColumn split(Country == 'USD',\n\tCountry == 'CAD',\n\tdisjoint: false) ~> ConditionalSplit1@(USD, CAD)"
 			}
 		]
 	}

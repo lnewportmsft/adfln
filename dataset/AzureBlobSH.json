@@ -19,5 +19,6 @@
 			"fileName": "",
 			"folderPath": "nyctaxi"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

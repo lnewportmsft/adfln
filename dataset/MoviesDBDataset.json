@@ -46,5 +46,6 @@
 			"fileName": "moviesDB.csv",
 			"folderPath": "demo"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

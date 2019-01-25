@@ -19,5 +19,6 @@
 			"fileName": "",
 			"folderPath": "demo/cleanmovie"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

@@ -1,13 +1,13 @@
 {
-	"name": "AzureSqlDatabaseDataset",
+	"name": "SourceDataset_xps",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabaseLinkedService",
+			"referenceName": "AzureSqlDatabase1",
 			"type": "LinkedServiceReference"
 		},
 		"type": "AzureSqlTable",
 		"typeProperties": {
-			"tableName": "dummyName"
+			"tableName": "[dbo].[mktzips]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

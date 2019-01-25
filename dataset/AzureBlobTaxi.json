@@ -97,5 +97,6 @@
 			"fileName": "yellow_tripdata_2016-01.csv",
 			"folderPath": "nyctaxi/2016"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

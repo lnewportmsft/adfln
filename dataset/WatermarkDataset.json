@@ -9,5 +9,6 @@
 		"typeProperties": {
 			"tableName": "[dbo].[watermarktable]"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }

@@ -30,7 +30,10 @@
 					}
 				}
 			}
-		]
+		],
+		"folder": {
+			"name": "Data Flow Demos"
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

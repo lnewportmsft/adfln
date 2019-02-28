@@ -1,0 +1,23 @@
+{
+	"name": "AzureSqlDWTable3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDW1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Misc"
+		},
+		"type": "AzureSqlDWTable",
+		"structure": [
+			{
+				"name": "digit",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[Cardinals]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

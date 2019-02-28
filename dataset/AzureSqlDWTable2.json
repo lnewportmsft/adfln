@@ -1,0 +1,17 @@
+{
+	"name": "AzureSqlDWTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDW1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Misc"
+		},
+		"type": "AzureSqlDWTable",
+		"typeProperties": {
+			"tableName": "batting"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

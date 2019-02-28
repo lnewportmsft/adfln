@@ -38,7 +38,10 @@
 					}
 				]
 			}
-		]
+		],
+		"folder": {
+			"name": "Copy Demos"
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

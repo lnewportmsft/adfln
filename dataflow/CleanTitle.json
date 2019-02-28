@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "CleanTitle",
 	"properties": {
 		"sources": [
 			{
@@ -14,7 +14,7 @@
 		"transformations": [
 			{
 				"name": "CleanTitle",
-				"script": "source1 derive(title = iif(locate(' (',title)==0,title,left(title,locate(' (',title)))\r\n) ~> CleanTitle"
+				"script": "source1 derive(title = iif(locate(' (',title)==0,title,left(title,locate(' (',title)))) ~> CleanTitle"
 			}
 		]
 	}

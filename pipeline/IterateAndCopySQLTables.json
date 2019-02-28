@@ -80,6 +80,9 @@
 			"tableList": {
 				"type": "Array"
 			}
+		},
+		"folder": {
+			"name": "Copy Demos"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"

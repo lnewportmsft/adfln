@@ -25,6 +25,9 @@
 					"type": "LinkedServiceReference"
 				}
 			}
+		],
+		"annotations": [
+			"BatchExecute"
 		]
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"

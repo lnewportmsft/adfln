@@ -1,0 +1,931 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "adfln"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SchemaDrift')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "salesdrift",
+							"type": "DatasetReference"
+						},
+						"name": "SalesSource1",
+						"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> SalesSource1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "driftout",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "CleanTotal sink(saveMode:'overwrite') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "AddTax",
+						"script": "SalesSource1 derive(each(match(name == 'COGS' || name == 'Cost'), $$+'_with_tax' = round(toDouble(trim($$,'$')) * 1.09,2))) ~> AddTax"
+					},
+					{
+						"name": "CleanTotal",
+						"script": "AddTax derive(each(match(locate('with_tax',name) > 0), $$ = left('$'+toString($$)+'00',locate('.', $$)+3))) ~> CleanTotal"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TaxiDemo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"description": "Sample demo data flow to transform taxi data showing usage of join and aggregate transformation.",
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "taxi_trip_data_input",
+							"type": "DatasetReference"
+						},
+						"name": "TripData",
+						"script": "source(output(\n\t\tmedallion as string,\n\t\thack_license as string,\n\t\tvendor_id as string,\n\t\trate_code as string,\n\t\tstore_and_fwd_flag as string,\n\t\tpickup_datetime as string,\n\t\tdropoff_datetime as string,\n\t\tpassenger_count as short,\n\t\ttrip_time_in_secs as long,\n\t\ttrip_distance as double,\n\t\tpickup_longitude as double,\n\t\tpickup_latitude as double,\n\t\tdropoff_longitude as double,\n\t\tdropoff_latitude as double\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> TripData",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "taxi_trip_fare_input",
+							"type": "DatasetReference"
+						},
+						"name": "TripFare",
+						"script": "source(output(\n\t\tmedallion as string,\n\t\t{ hack_license} as string,\n\t\t{ vendor_id} as string,\n\t\t{ pickup_datetime} as string,\n\t\t{ payment_type} as string,\n\t\t{ fare_amount} as double,\n\t\t{ surcharge} as double,\n\t\t{ mta_tax} as double,\n\t\t{ tip_amount} as double,\n\t\t{ tolls_amount} as double,\n\t\t{ total_amount} as double\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> TripFare",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "TaxiDemoVendorStatsSink",
+							"type": "DatasetReference"
+						},
+						"name": "VendorStatsSink",
+						"script": "AggregateVendorStats sink(saveMode:'overwrite') ~> VendorStatsSink"
+					},
+					{
+						"dataset": {
+							"referenceName": "TaxiDemoDayStatsSink",
+							"type": "DatasetReference"
+						},
+						"name": "DayStatsSink",
+						"script": "AggregateDayStats sink(saveMode:'overwrite') ~> DayStatsSink"
+					},
+					{
+						"dataset": {
+							"referenceName": "TaxiDemoTotalByPaymentType",
+							"type": "DatasetReference"
+						},
+						"name": "TotalPaymentByPaymentType",
+						"script": "AggregateByPaymentType sink(saveMode:'overwrite') ~> TotalPaymentByPaymentType"
+					}
+				],
+				"transformations": [
+					{
+						"name": "JoinMatchedData",
+						"script": "TripData, TripFare join(hack_license == { hack_license}\n\t&& TripData@medallion == TripFare@medallion\n\t&& vendor_id == { vendor_id}\n\t&& pickup_datetime == { pickup_datetime},\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinMatchedData"
+					},
+					{
+						"name": "AggregateVendorStats",
+						"script": "JoinMatchedData aggregate(groupBy(vendor_id),\n\tpassenger_count = round(sum(passenger_count), 2),\n\t\ttrip_time_in_secs = round(sum(trip_time_in_secs)/60, 2),\n\t\ttrip_distance = round(sum(trip_distance), 2),\n\t\tTotalTripFare = round(sum({ total_amount}), 2)) ~> AggregateVendorStats"
+					},
+					{
+						"name": "AggregateDayStats",
+						"script": "JoinMatchedData aggregate(groupBy(DayOfTheWeek = dayOfWeek(toDate(pickup_datetime,'yyyy-mm-dd hh:mm:ss'))),\n\ttrip_distance = round(avg(trip_distance), 2),\n\t\tpassenger_count = round(avg(passenger_count), 2),\n\t\ttrip_time_in_secs = round(avg(trip_time_in_secs)/60, 2),\n\t\taverage_fare = round(avg({ total_amount}), 2)) ~> AggregateDayStats"
+					},
+					{
+						"name": "AggregateByPaymentType",
+						"script": "TripFare aggregate(groupBy(PaymentType = { payment_type}),\n\teach(match(type=='double'), concat($$, '_total') = round(sum ($$)))) ~> AggregateByPaymentType"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Windows')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Product_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as decimal(10,0),\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "Window1",
+						"script": "source1 window(over(Color),\n\tdesc(StandardCost, true),\n\trownum = rowNumber()) ~> Window1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cleanAddresses')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Addresses_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "AddressSource",
+						"script": "source(output(\n\t\tAddressID as string,\n\t\tAddress1 as string,\n\t\tAddress2 as string,\n\t\tCity as string,\n\t\tProp_4 as string,\n\t\tProp_5 as string,\n\t\tProp_6 as string,\n\t\tProp_7 as string,\n\t\tProp_8 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> AddressSource",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "others",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "CleanAddress sink(saveMode:'overwrite') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "CleanAddress",
+						"script": "AddressSource derive(each(match(type == 'string'), $$ + '_clean' = trim(trim($$, '.'), '  '))) ~> CleanAddress"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "jsonblob",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tid as string,\n\t\tcity as string,\n\t\tloc as string,\n\t\tpop as long,\n\t\tstate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_params1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Params"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Product_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "prodSource",
+						"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> prodSource",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "blob_params",
+							"type": "DatasetReference"
+						},
+						"name": "paramsFile",
+						"script": "source(output(\n\t\tParamColor as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> paramsFile",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "getParams",
+						"script": "prodSource, paramsFile lookup(Color == ParamColor,\n\tbroadcast: 'none')~> getParams"
+					},
+					{
+						"name": "FilterRows",
+						"script": "Select1 filter(Color == ParamColor) ~> FilterRows"
+					},
+					{
+						"name": "AggregateStandardCost",
+						"script": "FilterRows aggregate(groupBy(Color),\n\tAverageStandardCostByColor = '$'+toString(round(avg(StandardCost),2))) ~> AggregateStandardCost"
+					},
+					{
+						"name": "Select1",
+						"script": "getParams select(mapColumn(\n\t\tProductID,\n\t\tName,\n\t\tProductNumber,\n\t\tColor,\n\t\tStandardCost,\n\t\tListPrice,\n\t\tSize,\n\t\tWeight,\n\t\tProductCategoryID,\n\t\tProductModelID,\n\t\tParamColor\n\t))~> Select1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pivotflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Product_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "ProductSource",
+						"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string,\n\t\tSellStartDate as string,\n\t\tSellEndDate as string,\n\t\tDiscontinuedDate as string,\n\t\tThumbNailPhoto as string,\n\t\tThumbnailPhotoFileName as string,\n\t\trowguid as string,\n\t\tModifiedDate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> ProductSource",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pivotflow2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Product_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "ProductSource",
+						"script": "source(output(\n\t\tProductID as string,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as string,\n\t\tSize as string,\n\t\tWeight as string,\n\t\tProductCategoryID as string,\n\t\tProductModelID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> ProductSource",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "PivotColorStandardCost",
+						"script": "ProductSource pivot(groupBy(Name,\n\t\tProductID),\n\tpivotBy(Color),\n\tCostSum = sum(StandardCost),\n\tcolumnNaming: '$N$V',\n\tlateral: true) ~> PivotColorStandardCost"
+					},
+					{
+						"name": "ProductSourceBranch",
+						"script": "ProductSource select(mapColumn(\n\t\tProductID2 = ProductID,\n\t\tName,\n\t\tProductNumber,\n\t\tColor,\n\t\tStandardCost,\n\t\tListPrice,\n\t\tSize,\n\t\tWeight,\n\t\tProductCategoryID,\n\t\tProductModelID\n\t))~> ProductSourceBranch"
+					},
+					{
+						"name": "Join1",
+						"script": "PivotColorStandardCost, ProductSourceBranch join(ProductID == ProductID2,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/regexflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "Addresses_Blob",
+							"type": "DatasetReference"
+						},
+						"name": "IncomingAddresses",
+						"script": "source(output(\n\t\tAddressID as string,\n\t\tAddress1 as string,\n\t\tAddress2 as string,\n\t\tCity as string,\n\t\tProp_4 as string,\n\t\tProp_5 as string,\n\t\tProp_6 as string,\n\t\tProp_7 as string,\n\t\tProp_8 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> IncomingAddresses",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "A_G",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "ConditionalSplit1@AThruG sink(saveMode:'overwrite') ~> sink1"
+					},
+					{
+						"dataset": {
+							"referenceName": "H_P",
+							"type": "DatasetReference"
+						},
+						"name": "sink2",
+						"script": "ConditionalSplit1@HThruP sink(saveMode:'overwrite') ~> sink2"
+					},
+					{
+						"dataset": {
+							"referenceName": "Q_Z",
+							"type": "DatasetReference"
+						},
+						"name": "sink3",
+						"script": "ConditionalSplit1@QThruZ sink(saveMode:'overwrite') ~> sink3"
+					},
+					{
+						"dataset": {
+							"referenceName": "others",
+							"type": "DatasetReference"
+						},
+						"name": "sink4",
+						"script": "ConditionalSplit1@other sink(saveMode:'overwrite') ~> sink4"
+					}
+				],
+				"transformations": [
+					{
+						"name": "CleanAddress",
+						"script": "IncomingAddresses derive(clean_address = regexReplace(Address1,`[ ]{2}|\\.`,' '),\n\t\thouse_num = regex_extract(Address1, `^(\\d+)`, 1)) ~> CleanAddress"
+					},
+					{
+						"name": "ConditionalSplit1",
+						"script": "CleanAddress split(rlike(City,'^[A-G]'),\n\trlike(City,'^[H-P]'),\n\trlike(City,'^[Q-Z]'),\n\tdisjoint: false) ~> ConditionalSplit1@(AThruG, HThruP, QThruZ, other)"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/soccerETL')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Soccer"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "soccer_events",
+							"type": "DatasetReference"
+						},
+						"name": "SpecifySchemaExtract",
+						"script": "source(output(\n\t\tid_odsp as string,\n\t\tid_event as string,\n\t\tsort_order as integer,\n\t\ttime as integer,\n\t\ttext as string,\n\t\tevent_type as string,\n\t\tevent_type2 as string,\n\t\tside as string,\n\t\tevent_team as string,\n\t\topponent as string,\n\t\tplayer as string,\n\t\tplayer2 as string,\n\t\tplayer_in as string,\n\t\tplayer_out as string,\n\t\tshot_place as string,\n\t\tshot_outcome as string,\n\t\tis_goal as string,\n\t\tlocation as string,\n\t\tbodypart as string,\n\t\tassist_method as string,\n\t\tsituation as string,\n\t\tfast_break as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SpecifySchemaExtract",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "locationMap",
+							"type": "DatasetReference"
+						},
+						"name": "locationMap",
+						"script": "source(output(\n\t\tType as string,\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> locationMap",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "driftout",
+							"type": "DatasetReference"
+						},
+						"name": "sinkToDW",
+						"script": "TimeBins sink(saveMode:'overwrite') ~> sinkToDW"
+					}
+				],
+				"transformations": [
+					{
+						"name": "DictionaryMapping1",
+						"script": "SpecifySchemaExtract derive(eventTypeMap = case(\r\n    event_type == '0','Announcement',\r\n    event_type == '1','Attempt',\r\n    event_type == '2','Corner',\r\n    event_type == '3','Foul',\r\n    event_type == '4','Yellow Card',\r\n    event_type == '5','Second yellow card',\r\n    event_type == '6','Red card',\r\n    event_type == '7','Substitution',\r\n    event_type == '8','Free kick won',\r\n    event_type == '9','Offside',\r\n    event_type == '10','Hand ball',\r\n    event_type == '11','Penalty conceded',\r\n    event_type == '99', 'NA'\r\n),\n\t\ttime = toInteger(time)) ~> DictionaryMapping1"
+					},
+					{
+						"name": "JoinStringDataViaLookup",
+						"script": "DictionaryMapping1, locationMap lookup(location == Type,\n\tbroadcast: 'none')~> JoinStringDataViaLookup"
+					},
+					{
+						"name": "TimeBins",
+						"script": "ColumnSelectionNaming window(over(time),\n\tasc(event_type2, true),\n\tTimeBins = nTile(),\n\tpartitionBy('hash', 1)) ~> TimeBins"
+					},
+					{
+						"name": "ColumnSelectionNaming",
+						"script": "JoinStringDataViaLookup select(mapColumn(\n\t\tid_odsp,\n\t\tid_event,\n\t\tsort_order,\n\t\ttime,\n\t\ttext,\n\t\tevent_type2,\n\t\tside,\n\t\tevent_team,\n\t\topponent,\n\t\tplayer,\n\t\tplayer2,\n\t\tplayer_in,\n\t\tplayer_out,\n\t\tshot_place,\n\t\tshot_outcome,\n\t\tis_goal,\n\t\tlocation,\n\t\tbodypart,\n\t\tassist_method,\n\t\tsituation,\n\t\tfast_break,\n\t\teventTypeName = eventTypeMap,\n\t\tLocationName = Name\n\t))~> ColumnSelectionNaming"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BaseballPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Baseball 1 Norm Batting Stats",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Baseball 1 Norm Batting Stats",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"sourceBatting": {},
+									"sourcePlayer": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainer/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Baseball"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BaseballPipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Baseball 1 Norm Batting Stats",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Baseball 1 Norm Batting Stats",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"sourceBatting": {},
+									"sourcePlayer": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainer/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Baseball"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyOnPremJpgToBlob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy OnPrem Images",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "FileSystemSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "adfpickup",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "adfdropoff",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Copy Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Currency Converter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Convert Currencies",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Currency Converter",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"USDCurrency": {},
+									"CADSource": {},
+									"USDSink": {},
+									"CADSink": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GetTableListAndTriggerCopyData')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupTableList",
+						"description": "Retrieve the table list from Azure SQL database",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = 'SalesLT' and TABLE_NAME <> 'ProductModel'"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlDatabaseDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "TriggerCopy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "LookupTableList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "IterateAndCopySQLTables",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"tableList": {
+									"value": "@activity('LookupTableList').output.value",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Copy Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MovieDemoPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "ExecuteMovieDemoDataFlow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MovieDemo",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"Movies": {},
+									"Output": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RegExDataFlow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "regexflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "regexflow",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"IncomingAddresses": {},
+									"sink1": {},
+									"sink2": {},
+									"sink3": {},
+									"sink4": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/regexflow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "SCDType2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "SCDType2",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"SQLProducts": {},
+									"DimProd": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainer/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Schema Drift Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "SchemaDrift",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "SchemaDrift",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"SalesSource1": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Drifts"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/SchemaDrift')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TaxiDemo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "TaxiDemoDataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TaxiDemo",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"TripData": {},
+									"TripFare": {},
+									"VendorStatsSink": {},
+									"DayStatsSink": {},
+									"TotalPaymentByPaymentType": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainter/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/TaxiDemo')]"
+			]
+		}
+	]
+}

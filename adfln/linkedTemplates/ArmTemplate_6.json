@@ -1,0 +1,1125 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "adfln"
+		},
+		"adfpickup_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.jpg"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_ProdCat')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "ProductCategoryID",
+						"type": "Int32"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "rowguid",
+						"type": "Guid"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'Production].[ProductCategory]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Products')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "ProductID",
+						"type": "Int32"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "String"
+					},
+					{
+						"name": "MakeFlag",
+						"type": "Boolean"
+					},
+					{
+						"name": "FinishedGoodsFlag",
+						"type": "Boolean"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "SafetyStockLevel",
+						"type": "Int16"
+					},
+					{
+						"name": "ReorderPoint",
+						"type": "Int16"
+					},
+					{
+						"name": "StandardCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "ListPrice",
+						"type": "Decimal"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "SizeUnitMeasureCode",
+						"type": "String"
+					},
+					{
+						"name": "WeightUnitMeasureCode",
+						"type": "String"
+					},
+					{
+						"name": "Weight",
+						"type": "Decimal"
+					},
+					{
+						"name": "DaysToManufacture",
+						"type": "Int32"
+					},
+					{
+						"name": "ProductLine",
+						"type": "String"
+					},
+					{
+						"name": "Class",
+						"type": "String"
+					},
+					{
+						"name": "Style",
+						"type": "String"
+					},
+					{
+						"name": "ProductSubcategoryID",
+						"type": "Int32"
+					},
+					{
+						"name": "ProductModelID",
+						"type": "Int32"
+					},
+					{
+						"name": "SellStartDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SellEndDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "DiscontinuedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "rowguid",
+						"type": "Guid"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'Production].[Product]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_SalesDetails')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ETL"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "SalesOrderID",
+						"type": "Int32"
+					},
+					{
+						"name": "SalesOrderDetailID",
+						"type": "Int32"
+					},
+					{
+						"name": "CarrierTrackingNumber",
+						"type": "String"
+					},
+					{
+						"name": "OrderQty",
+						"type": "Int16"
+					},
+					{
+						"name": "ProductID",
+						"type": "Int32"
+					},
+					{
+						"name": "SpecialOfferID",
+						"type": "Int32"
+					},
+					{
+						"name": "UnitPrice",
+						"type": "Decimal"
+					},
+					{
+						"name": "UnitPriceDiscount",
+						"type": "Decimal"
+					},
+					{
+						"name": "LineTotal",
+						"type": "Decimal"
+					},
+					{
+						"name": "rowguid",
+						"type": "Guid"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'Sales].[SalesOrderDetail]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_SalesHeader')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Demos"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "SalesOrderID",
+						"type": "Int32"
+					},
+					{
+						"name": "RevisionNumber",
+						"type": "Byte"
+					},
+					{
+						"name": "OrderDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "DueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ShipDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Status",
+						"type": "Byte"
+					},
+					{
+						"name": "OnlineOrderFlag",
+						"type": "Boolean"
+					},
+					{
+						"name": "SalesOrderNumber",
+						"type": "String"
+					},
+					{
+						"name": "PurchaseOrderNumber",
+						"type": "String"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "String"
+					},
+					{
+						"name": "CustomerID",
+						"type": "Int32"
+					},
+					{
+						"name": "SalesPersonID",
+						"type": "Int32"
+					},
+					{
+						"name": "TerritoryID",
+						"type": "Int32"
+					},
+					{
+						"name": "BillToAddressID",
+						"type": "Int32"
+					},
+					{
+						"name": "ShipToAddressID",
+						"type": "Int32"
+					},
+					{
+						"name": "ShipMethodID",
+						"type": "Int32"
+					},
+					{
+						"name": "CreditCardID",
+						"type": "Int32"
+					},
+					{
+						"name": "CreditCardApprovalCode",
+						"type": "String"
+					},
+					{
+						"name": "CurrencyRateID",
+						"type": "Int32"
+					},
+					{
+						"name": "SubTotal",
+						"type": "Decimal"
+					},
+					{
+						"name": "TaxAmt",
+						"type": "Decimal"
+					},
+					{
+						"name": "Freight",
+						"type": "Decimal"
+					},
+					{
+						"name": "TotalDue",
+						"type": "Decimal"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "rowguid",
+						"type": "Guid"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'Sales].[SalesOrderHeader]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfpickup')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedService1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": "[parameters('adfpickup_properties_typeProperties_fileName')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Baseball 1 Basic Stats')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Baseball"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "BaseballBatting",
+							"type": "DatasetReference"
+						},
+						"name": "sourceBatting",
+						"script": "source(output(\n\t\tplayerID as string,\n\t\tyearID as string,\n\t\tstint as string,\n\t\tteamID as string,\n\t\tlgID as string,\n\t\tG as integer,\n\t\tAB as integer,\n\t\tR as integer,\n\t\tH as integer,\n\t\tH2B as integer,\n\t\tH3B as integer,\n\t\tHR as integer,\n\t\tRBI as integer,\n\t\tSB as integer,\n\t\tCS as integer,\n\t\tBB as integer,\n\t\tSO as integer,\n\t\tIBB as integer,\n\t\tHBP as integer,\n\t\tSH as integer,\n\t\tSF as integer,\n\t\tGIDP as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> sourceBatting",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "PlayersBlob",
+							"type": "DatasetReference"
+						},
+						"name": "sourcePlayer",
+						"script": "source(output(\n\t\tplayerID as string,\n\t\tbirthYear as string,\n\t\tbirthMonth as string,\n\t\tbirthDay as string,\n\t\tbirthCountry as string,\n\t\tbirthState as string,\n\t\tbirthCity as string,\n\t\tdeathYear as string,\n\t\tdeathMonth as string,\n\t\tdeathDay as string,\n\t\tdeathCountry as string,\n\t\tdeathState as string,\n\t\tdeathCity as string,\n\t\tnameFirst as string,\n\t\tnameLast as string,\n\t\tnameGiven as string,\n\t\tweight as string,\n\t\theight as string,\n\t\tbats as string,\n\t\tthrows as string,\n\t\tdebut as string,\n\t\tfinalGame as string,\n\t\tretroID as string,\n\t\tbbrefID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> sourcePlayer",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "newbattingtable",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "AddTimestamp sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tplayerID_yearID,\n\t\tBA,\n\t\tOBP,\n\t\tSLG,\n\t\tTB,\n\t\tbirthYear,\n\t\tbirthMonth,\n\t\tbirthDay,\n\t\tbirthCountry,\n\t\tbirthState,\n\t\tbirthCity,\n\t\tdeathYear,\n\t\tdeathMonth,\n\t\tdeathDay,\n\t\tdeathCountry,\n\t\tdeathState,\n\t\tdeathCity,\n\t\tnameFirst,\n\t\tnameLast,\n\t\tnameGiven,\n\t\tweight,\n\t\theight,\n\t\tbats,\n\t\tthrows,\n\t\tdebut,\n\t\tfinalGame,\n\t\tretroID,\n\t\tbbrefID,\n\t\tplayerID = OrigSourceBatting@playerID,\n\t\tyearID,\n\t\tstint,\n\t\tteamID,\n\t\tlgID,\n\t\tG,\n\t\tAB,\n\t\tR,\n\t\tH,\n\t\tH2B,\n\t\tH3B,\n\t\tHR,\n\t\tRBI,\n\t\tSB,\n\t\tCS,\n\t\tBB,\n\t\tSO,\n\t\tIBB,\n\t\tHBP,\n\t\tSH,\n\t\tSF,\n\t\tGIDP,\n\t\tcurrenttime\n\t),\n\tsaveMode:'overwrite') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "createAggs",
+						"script": "sourceBatting aggregate(groupBy(playerID_yearID = playerID+'_'+yearID),\n\tBA = round(avg(H/AB),3),\n\t\tOBP = round(avg((H+BB+HBP)/(AB+BB+HBP+SF)),3),\n\t\tSLG = round(avg(((HR * 4) + (H3B * 3) + (H2B * 2) + (H-H2B-H3B-HR))/AB),3),\n\t\tTB = max((HR * 4) + (H3B * 3) + (H2B * 2) + (H-H2B-H3B-HR))) ~> createAggs"
+					},
+					{
+						"name": "Join1",
+						"script": "createAggs, PlayerInfoPlusOrigStats join(playerID_yearID == sourcePlayer@playerID + '_'+yearID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1"
+					},
+					{
+						"name": "PlayerInfoPlusOrigStats",
+						"script": "sourcePlayer, OrigSourceBatting join(sourcePlayer@playerID == OrigSourceBatting@playerID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> PlayerInfoPlusOrigStats"
+					},
+					{
+						"name": "OrigSourceBatting",
+						"script": "sourceBatting select()~> OrigSourceBatting"
+					},
+					{
+						"name": "AddTimestamp",
+						"script": "Join1 derive(currenttime = currentTimestamp()) ~> AddTimestamp"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Baseball 1 Norm Batting Stats')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Baseball"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "BaseballBatting",
+							"type": "DatasetReference"
+						},
+						"name": "sourceBatting",
+						"script": "source(output(\n\t\tplayerID as string,\n\t\tyearID as string,\n\t\tstint as string,\n\t\tteamID as string,\n\t\tlgID as string,\n\t\tG as integer,\n\t\tAB as integer,\n\t\tR as integer,\n\t\tH as integer,\n\t\tH2B as integer,\n\t\tH3B as integer,\n\t\tHR as integer,\n\t\tRBI as integer,\n\t\tSB as integer,\n\t\tCS as integer,\n\t\tBB as integer,\n\t\tSO as integer,\n\t\tIBB as integer,\n\t\tHBP as integer,\n\t\tSH as integer,\n\t\tSF as integer,\n\t\tGIDP as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> sourceBatting",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "PlayersBlob",
+							"type": "DatasetReference"
+						},
+						"name": "sourcePlayer",
+						"script": "source(output(\n\t\tplayerID as string,\n\t\tbirthYear as string,\n\t\tbirthMonth as string,\n\t\tbirthDay as string,\n\t\tbirthCountry as string,\n\t\tbirthState as string,\n\t\tbirthCity as string,\n\t\tdeathYear as string,\n\t\tdeathMonth as string,\n\t\tdeathDay as string,\n\t\tdeathCountry as string,\n\t\tdeathState as string,\n\t\tdeathCity as string,\n\t\tnameFirst as string,\n\t\tnameLast as string,\n\t\tnameGiven as string,\n\t\tweight as string,\n\t\theight as string,\n\t\tbats as string,\n\t\tthrows as string,\n\t\tdebut as string,\n\t\tfinalGame as string,\n\t\tretroID as string,\n\t\tbbrefID as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> sourcePlayer",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "AzureBlobBaseballOutput",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "Join1 sink(mapColumn(\n\t\tBA,\n\t\tOBP,\n\t\tSLG,\n\t\tbirthYear,\n\t\tbirthMonth,\n\t\tbirthDay,\n\t\tbirthCountry,\n\t\tbirthState,\n\t\tbirthCity,\n\t\tdeathYear,\n\t\tdeathMonth,\n\t\tdeathDay,\n\t\tdeathCountry,\n\t\tdeathState,\n\t\tdeathCity,\n\t\tnameFirst,\n\t\tnameLast,\n\t\tnameGiven,\n\t\tweight,\n\t\theight,\n\t\tbats,\n\t\tthrows,\n\t\tdebut,\n\t\tfinalGame,\n\t\tretroID,\n\t\tbbrefID,\n\t\tplayerID = OrigSourceBatting@playerID,\n\t\tyearID = OrigSourceBatting@yearID,\n\t\tstint,\n\t\tteamID,\n\t\tlgID,\n\t\tG,\n\t\tAB,\n\t\tR,\n\t\tH,\n\t\tH2B,\n\t\tH3B,\n\t\tHR,\n\t\tRBI,\n\t\tSB,\n\t\tCS,\n\t\tBB,\n\t\tSO,\n\t\tIBB,\n\t\tHBP,\n\t\tSH,\n\t\tSF,\n\t\tGIDP,\n\t\tTB\n\t),\n\tsaveMode:'overwrite') ~> sink1",
+						"maxConcurrentConnections": 10
+					}
+				],
+				"transformations": [
+					{
+						"name": "createAggs",
+						"script": "CalcTotalBases aggregate(groupBy(playerID,\n\t\tyearID),\n\tBA = round(avg(H/AB),3),\n\t\tOBP = round(avg((H+BB+HBP)/(AB+BB+HBP+SF)),3),\n\t\tSLG = round(avg(TB/AB),3)) ~> createAggs"
+					},
+					{
+						"name": "Join1",
+						"script": "createAggs, PlayerInfoPlusOrigStats join(createAggs@playerID == sourcePlayer@playerID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1"
+					},
+					{
+						"name": "PlayerInfoPlusOrigStats",
+						"script": "sourcePlayer, OrigSourceBatting join(sourcePlayer@playerID == OrigSourceBatting@playerID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> PlayerInfoPlusOrigStats"
+					},
+					{
+						"name": "CalcTotalBases",
+						"script": "sourceBatting derive(TB = (HR * 4) + (H3B * 3) + (H2B * 2) + (H-H2B-H3B-HR)) ~> CalcTotalBases"
+					},
+					{
+						"name": "OrigSourceBatting",
+						"script": "CalcTotalBases select()~> OrigSourceBatting"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Baseball 2 Adv Stats')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"description": "Let's now create the advanced Bill James Sabermetrics stats",
+				"folder": {
+					"name": "Baseball"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "SQLDBBaseball2",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tBA as double,\n\t\tOBP as double,\n\t\tSLG as double,\n\t\tTB as integer,\n\t\tbirthYear as string,\n\t\tbirthMonth as string,\n\t\tbirthDay as string,\n\t\tbirthCountry as string,\n\t\tbirthState as string,\n\t\tbirthCity as string,\n\t\tdeathYear as string,\n\t\tdeathMonth as string,\n\t\tdeathDay as string,\n\t\tdeathCountry as string,\n\t\tdeathState as string,\n\t\tdeathCity as string,\n\t\tnameFirst as string,\n\t\tnameLast as string,\n\t\tnameGiven as string,\n\t\tweight as string,\n\t\theight as string,\n\t\tbats as string,\n\t\tthrows as string,\n\t\tdebut as string,\n\t\tfinalGame as string,\n\t\tretroID as string,\n\t\tbbrefID as string,\n\t\tplayerID as string,\n\t\tyearID as string,\n\t\tstint as string,\n\t\tteamID as string,\n\t\tlgID as string,\n\t\tG as integer,\n\t\tAB as integer,\n\t\tR as integer,\n\t\tH as integer,\n\t\tH2B as integer,\n\t\tH3B as integer,\n\t\tHR as integer,\n\t\tRBI as integer,\n\t\tSB as integer,\n\t\tCS as integer,\n\t\tBB as integer,\n\t\tSO as integer,\n\t\tIBB as integer,\n\t\tHBP as integer,\n\t\tSH as integer,\n\t\tSF as integer,\n\t\tGIDP as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "DWSabermetrics",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "RunsCreated sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tBA,\n\t\tOBP,\n\t\tSLG,\n\t\tTB,\n\t\tbirthYear,\n\t\tbirthMonth,\n\t\tbirthDay,\n\t\tbirthCountry,\n\t\tbirthState,\n\t\tbirthCity,\n\t\tdeathYear,\n\t\tdeathMonth,\n\t\tdeathDay,\n\t\tdeathCountry,\n\t\tdeathState,\n\t\tdeathCity,\n\t\tnameFirst,\n\t\tnameLast,\n\t\tnameGiven,\n\t\tweight,\n\t\theight,\n\t\tbats,\n\t\tthrows,\n\t\tdebut,\n\t\tfinalGame,\n\t\tretroID,\n\t\tbbrefID,\n\t\tplayerID,\n\t\tyearID,\n\t\tstint,\n\t\tteamID,\n\t\tlgID,\n\t\tG,\n\t\tAB,\n\t\tR,\n\t\tH,\n\t\tH2B,\n\t\tH3B,\n\t\tHR,\n\t\tRBI,\n\t\tSB,\n\t\tCS,\n\t\tBB,\n\t\tSO,\n\t\tIBB,\n\t\tHBP,\n\t\tSH,\n\t\tSF,\n\t\tGIDP,\n\t\tRunsCreated\n\t),\n\tsaveMode:'overwrite') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "RunsCreated",
+						"script": "source1 derive(RunsCreated = round(  ((H + BB) * TB) / (AB + BB), 3)) ~> RunsCreated"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BugBash1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Bug Bashes"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "SQLDB_SalesHeader",
+							"type": "DatasetReference"
+						},
+						"name": "SourceSalesHeader",
+						"script": "source(output(\n\t\tSalesOrderID as integer,\n\t\tRevisionNumber as string,\n\t\tOrderDate as date,\n\t\tDueDate as date,\n\t\tShipDate as date,\n\t\tStatus as string,\n\t\tOnlineOrderFlag as boolean,\n\t\tSalesOrderNumber as string,\n\t\tPurchaseOrderNumber as string,\n\t\tAccountNumber as string,\n\t\tCustomerID as integer,\n\t\tShipToAddressID as integer,\n\t\tBillToAddressID as integer,\n\t\tShipMethod as string,\n\t\tCreditCardApprovalCode as string,\n\t\tSubTotal as decimal(10,0),\n\t\tTaxAmt as decimal(10,0),\n\t\tFreight as decimal(10,0),\n\t\tTotalDue as decimal(10,0),\n\t\tComment as string,\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceSalesHeader",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "SQLDB_SalesDetail",
+							"type": "DatasetReference"
+						},
+						"name": "SourceSalesDetail",
+						"script": "source(output(\n\t\tSalesOrderID as integer,\n\t\tSalesOrderDetailID as integer,\n\t\tOrderQty as short,\n\t\tProductID as integer,\n\t\tUnitPrice as decimal(10,0),\n\t\tUnitPriceDiscount as decimal(10,0),\n\t\tLineTotal as decimal(10,0),\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceSalesDetail",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "SQLDB_Products",
+							"type": "DatasetReference"
+						},
+						"name": "SourceProduct",
+						"script": "source(output(\n\t\tProductID as integer,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as decimal(10,0),\n\t\tSize as string,\n\t\tWeight as decimal(10,0),\n\t\tProductCategoryID as integer,\n\t\tProductModelID as integer,\n\t\tSellStartDate as date,\n\t\tSellEndDate as date,\n\t\tDiscontinuedDate as date,\n\t\tThumbNailPhoto as string,\n\t\tThumbnailPhotoFileName as string,\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceProduct",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "ADW_FactSales",
+							"type": "DatasetReference"
+						},
+						"name": "SinkFactSales",
+						"script": "Join1 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tOrderTotal,\n\t\tRevisionNumber,\n\t\tOrderDate,\n\t\tDueDate,\n\t\tShipDate,\n\t\tStatus,\n\t\tOnlineOrderFlag,\n\t\tSalesOrderNumber,\n\t\tPurchaseOrderNumber,\n\t\tAccountNumber,\n\t\tCustomerID,\n\t\tShipToAddressID,\n\t\tBillToAddressID,\n\t\tShipMethod,\n\t\tCreditCardApprovalCode,\n\t\tSubTotal,\n\t\tTaxAmt,\n\t\tFreight,\n\t\tTotalDue,\n\t\tComment,\n\t\trowguid,\n\t\tModifiedDate\n\t),\n\tsaveMode:'overwrite') ~> SinkFactSales"
+					},
+					{
+						"dataset": {
+							"referenceName": "ADW_DimProduct",
+							"type": "DatasetReference"
+						},
+						"name": "sinkDimProd",
+						"script": "Aggregate2 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tName,\n\t\tProdCount\n\t),\n\tsaveMode:'overwrite') ~> sinkDimProd"
+					}
+				],
+				"transformations": [
+					{
+						"name": "Aggregate1",
+						"script": "SourceSalesDetail aggregate(groupBy(SalesOrderID),\n\tOrderTotal = sum(LineTotal)) ~> Aggregate1"
+					},
+					{
+						"name": "Join1",
+						"script": "Aggregate1, SourceSalesHeader join(Aggregate1@SalesOrderID == SourceSalesHeader@SalesOrderID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1"
+					},
+					{
+						"name": "Join2",
+						"script": "SourceSalesDetail, SourceProduct join(SourceSalesDetail@ProductID == SourceProduct@ProductID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join2"
+					},
+					{
+						"name": "Aggregate2",
+						"script": "Join2 aggregate(groupBy(Name),\n\tProdCount = sum(1)) ~> Aggregate2"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BugBash2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Bug Bashes"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "SQLDB_SalesHeader",
+							"type": "DatasetReference"
+						},
+						"name": "SourceSalesHeader",
+						"script": "source(output(\n\t\tSalesOrderID as integer,\n\t\tRevisionNumber as string,\n\t\tOrderDate as date,\n\t\tDueDate as date,\n\t\tShipDate as date,\n\t\tStatus as string,\n\t\tOnlineOrderFlag as boolean,\n\t\tSalesOrderNumber as string,\n\t\tPurchaseOrderNumber as string,\n\t\tAccountNumber as string,\n\t\tCustomerID as integer,\n\t\tShipToAddressID as integer,\n\t\tBillToAddressID as integer,\n\t\tShipMethod as string,\n\t\tCreditCardApprovalCode as string,\n\t\tSubTotal as decimal(10,0),\n\t\tTaxAmt as decimal(10,0),\n\t\tFreight as decimal(10,0),\n\t\tTotalDue as decimal(10,0),\n\t\tComment as string,\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceSalesHeader",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "SQLDB_SalesDetail",
+							"type": "DatasetReference"
+						},
+						"name": "SourceSalesDetail",
+						"script": "source(output(\n\t\tSalesOrderID as integer,\n\t\tSalesOrderDetailID as integer,\n\t\tOrderQty as short,\n\t\tProductID as integer,\n\t\tUnitPrice as decimal(10,0),\n\t\tUnitPriceDiscount as decimal(10,0),\n\t\tLineTotal as decimal(10,0),\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceSalesDetail",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "SQLDB_Products",
+							"type": "DatasetReference"
+						},
+						"name": "SourceProduct",
+						"script": "source(output(\n\t\tProductID as integer,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as decimal(10,0),\n\t\tSize as string,\n\t\tWeight as decimal(10,0),\n\t\tProductCategoryID as integer,\n\t\tProductModelID as integer,\n\t\tSellStartDate as date,\n\t\tSellEndDate as date,\n\t\tDiscontinuedDate as date,\n\t\tThumbNailPhoto as string,\n\t\tThumbnailPhotoFileName as string,\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SourceProduct",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "SQLDB_ProdCat",
+							"type": "DatasetReference"
+						},
+						"name": "ProdCategoryLookup",
+						"script": "source(output(\n\t\tProductCategoryID as integer,\n\t\tParentProductCategoryID as integer,\n\t\tName as string,\n\t\trowguid as string,\n\t\tModifiedDate as date\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> ProdCategoryLookup",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "ADW_FactSales",
+							"type": "DatasetReference"
+						},
+						"name": "SinkFactSales",
+						"script": "Join1 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tSalesOrderID = Aggregate1@SalesOrderID,\n\t\tOrderTotal,\n\t\tRevisionNumber,\n\t\tOrderDate,\n\t\tDueDate,\n\t\tShipDate,\n\t\tStatus,\n\t\tOnlineOrderFlag,\n\t\tSalesOrderNumber,\n\t\tPurchaseOrderNumber,\n\t\tAccountNumber,\n\t\tCustomerID,\n\t\tShipToAddressID,\n\t\tBillToAddressID,\n\t\tShipMethod,\n\t\tCreditCardApprovalCode,\n\t\tSubTotal,\n\t\tTaxAmt,\n\t\tFreight,\n\t\tTotalDue,\n\t\tComment,\n\t\trowguid,\n\t\tModifiedDate\n\t),\n\tsaveMode:'overwrite') ~> SinkFactSales"
+					},
+					{
+						"dataset": {
+							"referenceName": "ADW_DimProduct",
+							"type": "DatasetReference"
+						},
+						"name": "sinkDimProd",
+						"script": "Aggregate2 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tProdName = Color,\n\t\tProdCount\n\t),\n\tsaveMode:'overwrite') ~> sinkDimProd"
+					}
+				],
+				"transformations": [
+					{
+						"name": "Aggregate1",
+						"script": "SourceSalesDetail aggregate(groupBy(SalesOrderID),\n\tOrderTotal = sum(LineTotal)) ~> Aggregate1"
+					},
+					{
+						"name": "Join1",
+						"script": "Aggregate1, SourceSalesHeader join(Aggregate1@SalesOrderID == SourceSalesHeader@SalesOrderID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1"
+					},
+					{
+						"name": "Join2",
+						"script": "SourceSalesDetail, Select1 join(SourceSalesDetail@ProductID == Select1@ProductID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join2"
+					},
+					{
+						"name": "Aggregate2",
+						"script": "Join2 aggregate(groupBy(Color),\n\tProdCount = sum(1)) ~> Aggregate2"
+					},
+					{
+						"name": "Lookup1",
+						"script": "ProdCategoryLookup, SourceProduct lookup(ProdCategoryLookup@ProductCategoryID == SourceProduct@ProductCategoryID,\n\tbroadcast: 'none')~> Lookup1"
+					},
+					{
+						"name": "Select1",
+						"script": "Lookup1 select(mapColumn(\n\t\tProdCategoryLookup@ProductCategoryID,\n\t\tParentProductCategoryID,\n\t\tProdCategoryLookup@Name,\n\t\tProductID,\n\t\tSourceProduct@Name,\n\t\tProductNumber,\n\t\tColor,\n\t\tStandardCost,\n\t\tListPrice,\n\t\tSize,\n\t\tWeight,\n\t\tProductModelID,\n\t\tSellStartDate,\n\t\tSellEndDate,\n\t\tDiscontinuedDate\n\t))~> Select1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CleanTitle')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "MoviesDBDataset",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as integer,\n\t\tRating as integer,\n\t\t{Rotton Tomato} as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "CleanTitle",
+						"script": "source1 derive(title = iif(locate(' (',title)==0,title,left(title,locate(' (',title)))) ~> CleanTitle"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Currency Converter')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"description": "Sample demo data flow to convert currencies showing usage of union, derive and conditional split transformation.",
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "CurrencyDatasetUSD",
+							"type": "DatasetReference"
+						},
+						"name": "USDCurrency",
+						"script": "source(output(\n\t\tPreviousConversionRate as double,\n\t\tCountry as string,\n\t\tDateTime1 as string,\n\t\tCurrentConversionRate as double\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> USDCurrency",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "CurrencyDatasetCAD",
+							"type": "DatasetReference"
+						},
+						"name": "CADSource",
+						"script": "source(output(\n\t\tPreviousConversionRate as double,\n\t\tCountry as string,\n\t\tDateTime1 as string,\n\t\tCurrentConversionRate as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> CADSource",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "USDOutput",
+							"type": "DatasetReference"
+						},
+						"name": "USDSink",
+						"script": "ConditionalSplit1@USD sink(saveMode:'overwrite') ~> USDSink"
+					},
+					{
+						"dataset": {
+							"referenceName": "CADOutput",
+							"type": "DatasetReference"
+						},
+						"name": "CADSink",
+						"script": "ConditionalSplit1@CAD sink(saveMode:'overwrite') ~> CADSink"
+					}
+				],
+				"transformations": [
+					{
+						"name": "Union",
+						"description": "The Union combines 2 streams together",
+						"script": "USDCurrency, CADSource union(byName: true)~> Union"
+					},
+					{
+						"name": "NewCurrencyColumn",
+						"description": "Create a new calculated column from currency rate",
+						"script": "Union derive(NewCurrencyRate = round(CurrentConversionRate*1.25)) ~> NewCurrencyColumn"
+					},
+					{
+						"name": "ConditionalSplit1",
+						"description": "Split the data on state to create 2 streams",
+						"script": "NewCurrencyColumn split(Country == 'USD',\n\tCountry == 'CAD',\n\tdisjoint: false) ~> ConditionalSplit1@(USD, CAD)"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB Test 2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Misc"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "AzureSqlDWTable3",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tName as string,\n\t\tProdCount as long\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "AzureSqlDWTable3",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "source1 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tdigit = Name\n\t),\n\tsaveMode:'append') ~> sink1"
+					}
+				],
+				"transformations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB Test')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Misc"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "ADW_DimProduct",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tProdName as string,\n\t\tProdCount as long\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "ADW_DimProduct",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "source1 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tProdName,\n\t\tProdCount\n\t),\n\tsaveMode:'append') ~> sink1"
+					}
+				],
+				"transformations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Drift2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "salesdrift",
+							"type": "DatasetReference"
+						},
+						"name": "SalesSource1",
+						"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> SalesSource1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "AddTax",
+						"script": "SalesSource1 derive(each(match(name == 'COGS' || name == 'Cost'), $$+'_with_tax' = round(toDouble(trim($$,'$')) * 1.09,2))) ~> AddTax"
+					},
+					{
+						"name": "CleanTotal",
+						"script": "AddTax derive(each(match(locate('with_tax',name) > 0), $$ = left('$'+toString($$)+'00',locate('.', $$)+3))) ~> CleanTotal"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MovieDemo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"description": "Sample demo data flow to transform movie data showing usage of derive transformation.",
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "movie_dataflow_source",
+							"type": "DatasetReference"
+						},
+						"name": "Movies",
+						"script": "source(output(\n\t\tmovieId as string,\n\t\ttitle as string,\n\t\tgenres as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> Movies",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "movie_dataflow_sink",
+							"type": "DatasetReference"
+						},
+						"name": "Output",
+						"script": "MoviesYear sink(saveMode:'overwrite') ~> Output"
+					}
+				],
+				"transformations": [
+					{
+						"name": "MoviesYear",
+						"script": "Movies derive(year = toInteger(trim(right(title, 6), '()')),\n\t\ttitle = toString(left(title, length(title)-6))) ~> MoviesYear"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MyDemoDataFlow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "MoviesDBDataset",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tmovie as string,\n\t\ttitle as string,\n\t\tgenres as string,\n\t\tyear as integer,\n\t\tRating as integer,\n\t\t{Rotton Tomato} as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "DemoSinkDataset",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "Aggregate1 sink(saveMode:'overwrite') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "MoviesBefore1990",
+						"script": "source1 filter(year < 1990) ~> MoviesBefore1990"
+					},
+					{
+						"name": "Aggregate1",
+						"script": "MoviesBefore1990 aggregate(groupBy(genres),\n\tRating = avg(Rating)) ~> Aggregate1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RankDemo')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "AzureSQLIncremental_Changes",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [],
+				"transformations": [
+					{
+						"name": "SurrogateKey1",
+						"script": "source1 keyGenerate(output(undefined as long),\n\tstartAt: 1L) ~> SurrogateKey1"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD Dataflow 2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "ADW_FactSales",
+							"type": "DatasetReference"
+						},
+						"name": "source1",
+						"script": "source(output(\n\t\tOrderTotal as decimal(10,0),\n\t\tRevisionNumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp,\n\t\tStatus as string,\n\t\tOnlineOrderFlag as boolean,\n\t\tSalesOrderNumber as string,\n\t\tPurchaseOrderNumber as string,\n\t\tAccountNumber as string,\n\t\tCustomerID as integer,\n\t\tShipToAddressID as integer,\n\t\tBillToAddressID as integer,\n\t\tShipMethod as string,\n\t\tCreditCardApprovalCode as string,\n\t\tSubTotal as decimal(10,0),\n\t\tTaxAmt as decimal(10,0),\n\t\tFreight as decimal(10,0),\n\t\tTotalDue as decimal(10,0),\n\t\tComment as string,\n\t\trowguid as string,\n\t\tModifiedDate as timestamp\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> source1",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "ADW_FactSales",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "source1 sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tOrderTotal,\n\t\tRevisionNumber,\n\t\tOrderDate,\n\t\tDueDate,\n\t\tShipDate,\n\t\tStatus,\n\t\tOnlineOrderFlag,\n\t\tSalesOrderNumber,\n\t\tPurchaseOrderNumber,\n\t\tAccountNumber,\n\t\tCustomerID,\n\t\tShipToAddressID,\n\t\tBillToAddressID,\n\t\tShipMethod,\n\t\tCreditCardApprovalCode,\n\t\tSubTotal,\n\t\tTaxAmt,\n\t\tFreight,\n\t\tTotalDue,\n\t\tComment,\n\t\trowguid,\n\t\tModifiedDate\n\t),\n\tsaveMode:'append') ~> sink1"
+					}
+				],
+				"transformations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCDType2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Demos"
+				},
+				"sources": [
+					{
+						"dataset": {
+							"referenceName": "SQLProducts",
+							"type": "DatasetReference"
+						},
+						"name": "SQLProducts",
+						"script": "source(output(\n\t\tProductID as integer,\n\t\tName as string,\n\t\tProductNumber as string,\n\t\tColor as string,\n\t\tStandardCost as decimal(10,0),\n\t\tListPrice as decimal(10,0),\n\t\tSize as string,\n\t\tWeight as decimal(10,0)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> SQLProducts",
+						"typeProperties": {}
+					},
+					{
+						"dataset": {
+							"referenceName": "DimProd",
+							"type": "DatasetReference"
+						},
+						"name": "DimProd",
+						"script": "source(output(\n\t\tProductKey as integer,\n\t\tProductAlternateKey as string,\n\t\tProductSubcategoryKey as integer,\n\t\tWeightUnitMeasureCode as string,\n\t\tSizeUnitMeasureCode as string,\n\t\tEnglishProductName as string,\n\t\tSpanishProductName as string,\n\t\tFrenchProductName as string,\n\t\tStandardCost as decimal(10,0),\n\t\tFinishedGoodsFlag as boolean,\n\t\tColor as string,\n\t\tSafetyStockLevel as short,\n\t\tReorderPoint as short,\n\t\tListPrice as decimal(10,0),\n\t\tSize as string,\n\t\tSizeRange as string,\n\t\tWeight as double,\n\t\tDaysToManufacture as integer,\n\t\tProductLine as string,\n\t\tDealerPrice as decimal(10,0),\n\t\tClass as string,\n\t\tStyle as string,\n\t\tModelName as string,\n\t\tEnglishDescription as string,\n\t\tFrenchDescription as string,\n\t\tChineseDescription as string,\n\t\tArabicDescription as string,\n\t\tHebrewDescription as string,\n\t\tThaiDescription as string,\n\t\tGermanDescription as string,\n\t\tJapaneseDescription as string,\n\t\tTurkishDescription as string,\n\t\tStartDate as timestamp,\n\t\tEndDate as timestamp,\n\t\tStatus as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> DimProd",
+						"typeProperties": {}
+					}
+				],
+				"sinks": [
+					{
+						"dataset": {
+							"referenceName": "ADW_DimProduct",
+							"type": "DatasetReference"
+						},
+						"name": "sink1",
+						"script": "SetAttributes sink(format: 'table',\n\tstaged: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tmapColumn(\n\t\tProductKey = ProductID,\n\t\tProductAlternateKey = surrogatekey,\n\t\tProductSubcategoryKey,\n\t\tWeightUnitMeasureCode,\n\t\tSizeUnitMeasureCode,\n\t\tEnglishProductName = Name,\n\t\tSpanishProductName,\n\t\tFrenchProductName,\n\t\tStandardCost,\n\t\tFinishedGoodsFlag = mybit,\n\t\tColor,\n\t\tSafetyStockLevel,\n\t\tReorderPoint,\n\t\tListPrice,\n\t\tSize,\n\t\tSizeRange,\n\t\tWeight,\n\t\tDaysToManufacture,\n\t\tProductLine,\n\t\tDealerPrice,\n\t\tClass,\n\t\tStyle,\n\t\tModelName,\n\t\tEnglishDescription,\n\t\tFrenchDescription,\n\t\tChineseDescription,\n\t\tArabicDescription,\n\t\tHebrewDescription,\n\t\tThaiDescription,\n\t\tGermanDescription,\n\t\tJapaneseDescription,\n\t\tTurkishDescription,\n\t\tStartDate,\n\t\tEndDate,\n\t\tStatus\n\t),\n\tsaveMode:'append') ~> sink1"
+					}
+				],
+				"transformations": [
+					{
+						"name": "LookupKeys",
+						"script": "SQLProducts, DimProd join(ProductID == ProductKey,\n\tjoinType:'left',\n\tbroadcast: 'none')~> LookupKeys"
+					},
+					{
+						"name": "ConditionalSplit1",
+						"script": "ColumnSelection split(isNull(ProductAlternateKey),\n\tdisjoint: false) ~> ConditionalSplit1@(NewRow, ExistingMember)"
+					},
+					{
+						"name": "SurrogateKey1",
+						"script": "ConditionalSplit1@NewRow keyGenerate(output(surrogatekey as long),\n\tstartAt: 1L) ~> SurrogateKey1"
+					},
+					{
+						"name": "ColumnSelection",
+						"script": "LookupKeys select(mapColumn(\n\t\tProductID,\n\t\tName,\n\t\tProductNumber,\n\t\tColor = SQLProducts@Color,\n\t\tStandardCost = SQLProducts@StandardCost,\n\t\tListPrice = SQLProducts@ListPrice,\n\t\tSize = SQLProducts@Size,\n\t\tWeight = SQLProducts@Weight,\n\t\tProductKey,\n\t\tProductAlternateKey,\n\t\tProductSubcategoryKey,\n\t\tWeightUnitMeasureCode,\n\t\tSizeUnitMeasureCode,\n\t\tEnglishProductName,\n\t\tSpanishProductName,\n\t\tFrenchProductName,\n\t\tFinishedGoodsFlag,\n\t\tSafetyStockLevel,\n\t\tReorderPoint,\n\t\tSizeRange,\n\t\tDaysToManufacture,\n\t\tProductLine,\n\t\tDealerPrice,\n\t\tClass,\n\t\tStyle,\n\t\tModelName,\n\t\tEnglishDescription,\n\t\tFrenchDescription,\n\t\tChineseDescription,\n\t\tArabicDescription,\n\t\tHebrewDescription,\n\t\tThaiDescription,\n\t\tGermanDescription,\n\t\tJapaneseDescription,\n\t\tTurkishDescription,\n\t\tStartDate,\n\t\tEndDate,\n\t\tStatus\n\t))~> ColumnSelection"
+					},
+					{
+						"name": "SetAttributes",
+						"script": "SurrogateKey1 derive(surrogatekey = concat('abcd', toString(1)),\n\t\tStatus = 'Y',\n\t\tStartDate = currentDate(),\n\t\tEndDate = 1200,\n\t\tNullDesc = toString('  '),\n\t\tmybit = 0) ~> SetAttributes"
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}

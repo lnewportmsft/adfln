@@ -1,0 +1,328 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "adfln"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/TaxiDemoPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "TaxiDemo",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TaxiDemo",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"TripData": {},
+									"TripFare": {},
+									"VendorStatsSink": {},
+									"DayStatsSink": {},
+									"TotalPaymentByPaymentType": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "MyAzureBlobLinkedService",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "demo/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/masterPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "MyExecutePipelineActivity",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "invokedPipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"sourceBlobContainer": {
+									"value": "@pipeline().parameters.masterSourceBlobContainer",
+									"type": "Expression"
+								},
+								"sinkBlobCountainer": {
+									"value": "@pipeline().parameters.masterSinkBlobContainer",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"masterSourceBlobContainer": {
+						"type": "String"
+					},
+					"masterSinkBlobContainer": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PipelineController"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "SCDType2",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"SQLProducts": {},
+									"DimProd": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainer/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Misc"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Baseball 2 Adv Stats",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Baseball 2 Adv Stats",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "MyAzureBlobLinkedService",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "mycontainer/staging"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Misc"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline4')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Currency Converter",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Currency Converter",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"USDCurrency": {},
+									"CADSource": {},
+									"USDSink": {},
+									"CADSink": {}
+								}
+							},
+							"linkedService": {
+								"referenceName": "MyDataBricksLinkedService",
+								"type": "LinkedServiceReference"
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "AzureBlobStorage1",
+									"type": "LinkedServiceReference"
+								}
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Misc"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Controller Daily Analytics Loader')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Incremental Data Lake Loading",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "My Incremental Pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Daily Sales Summaries and Cals",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Incremental Data Lake Loading",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Currency Converter",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Load Data Stores",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Daily Sales Summaries and Cals",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ETL Final Stage",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"issuccess": "1"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PipelineController"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}

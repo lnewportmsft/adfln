@@ -8,6 +8,15 @@
 		"integrationRuntime_integrationRuntime1": {
 			"value": "integrationRuntime1"
 		},
+		"integrationRuntime_integrationRuntime2": {
+			"value": "integrationRuntime2"
+		},
+		"integrationRuntime_integrationRuntime3": {
+			"value": "integrationRuntime3"
+		},
+		"integrationRuntime_selfhostedir": {
+			"value": "selfhostedir"
+		},
 		"AmazonS3Source_secretAccessKey": {
 			"value": ""
 		},
@@ -17,13 +26,34 @@
 		"AzureBlobSH_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDW1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDW2_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDWLinkedService_connectionString": {
 			"value": ""
 		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabaseLinkedService_connectionString": {
+			"value": ""
+		},
+		"BaseballLS_connectionString": {
+			"value": ""
+		},
+		"DWDimProd_connectionString": {
 			"value": ""
 		},
 		"MyAzureBlobLinkedService_connectionString": {
@@ -35,11 +65,44 @@
 		"SharePointOData_password": {
 			"value": ""
 		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"adlsgen2_accountKey": {
+			"value": ""
+		},
+		"linkedService1_password": {
+			"value": ""
+		},
+		"A_G_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"A_G_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/A_G"
+		},
+		"Addresses_Blob_properties_typeProperties_fileName": {
+			"value": "Address.csv"
+		},
+		"Addresses_Blob_properties_typeProperties_folderPath": {
+			"value": "demo"
+		},
 		"AzureBlob1_properties_typeProperties_fileName": {
 			"value": ""
 		},
 		"AzureBlob1_properties_typeProperties_folderPath": {
 			"value": "demo/cleanmovie"
+		},
+		"AzureBlob2_properties_typeProperties_fileName": {
+			"value": "movies*.csv"
+		},
+		"AzureBlob2_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData"
+		},
+		"AzureBlobBaseballOutput_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"AzureBlobBaseballOutput_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/baseball"
 		},
 		"AzureBlobSH_properties_typeProperties_fileName": {
 			"value": ""
@@ -52,6 +115,24 @@
 		},
 		"AzureBlobTaxi_properties_typeProperties_folderPath": {
 			"value": "nyctaxi/2016"
+		},
+		"BaseballBatting_properties_typeProperties_fileName": {
+			"value": "Batting.csv"
+		},
+		"BaseballBatting_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/baseball"
+		},
+		"BattingSink_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"BattingSink_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/baseball"
+		},
+		"BlobStoreIncremental_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt') "
+		},
+		"BlobStoreIncremental_properties_typeProperties_folderPath": {
+			"value": "mycontainer/incremental"
 		},
 		"CADOutput_properties_typeProperties_fileName": {
 			"value": ""
@@ -71,11 +152,35 @@
 		"CurrencyDatasetUSD_properties_typeProperties_folderPath": {
 			"value": "demo"
 		},
+		"DemoSinkDataset_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DemoSinkDataset_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output"
+		},
+		"DestinationDataset_5ra_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationDataset_5ra_properties_typeProperties_folderPath": {
+			"value": "somecontainer/markfolder"
+		},
 		"DestinationDataset_ael_properties_typeProperties_fileName": {
 			"value": ""
 		},
 		"DestinationDataset_ael_properties_typeProperties_folderPath": {
 			"value": "raw"
+		},
+		"DestinationDataset_cce_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationDataset_cce_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/json"
+		},
+		"DestinationDataset_d2r_properties_typeProperties_fileName": {
+			"value": "myout.parquet"
+		},
+		"DestinationDataset_d2r_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/parquet"
 		},
 		"DestinationDataset_dia_properties_typeProperties_fileName": {
 			"value": "moviesout.csv"
@@ -83,11 +188,35 @@
 		"DestinationDataset_dia_properties_typeProperties_folderPath": {
 			"value": "@concat('demo/movie_sink/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
 		},
+		"DestinationDataset_e4g_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationDataset_e4g_properties_typeProperties_folderPath": {
+			"value": "copyfromsql"
+		},
+		"DestinationDataset_hii_properties_typeProperties_fileName": {
+			"value": "_committed_2034928433163805213"
+		},
+		"DestinationDataset_hii_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/sample"
+		},
+		"DestinationDataset_xps_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationDataset_xps_properties_typeProperties_folderPath": {
+			"value": "copyfromsql2"
+		},
 		"DestinationDataset_y4j_properties_typeProperties_fileName": {
 			"value": "@dataset().cw_fileName"
 		},
 		"DestinationDataset_y4j_properties_typeProperties_folderPath": {
 			"value": "@concat('raw/', formatDateTime(trigger().startTime, 'yyyy'), '/', formatDateTime(trigger().startTime, 'MM'), '/', formatDateTime(trigger().startTime, 'dd'))"
+		},
+		"H_P_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"H_P_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/H_P"
 		},
 		"MoviesDBDataset_properties_typeProperties_fileName": {
 			"value": "moviesDB.csv"
@@ -95,17 +224,53 @@
 		"MoviesDBDataset_properties_typeProperties_folderPath": {
 			"value": "demo"
 		},
+		"PlayersBlob_properties_typeProperties_fileName": {
+			"value": "People.csv"
+		},
+		"PlayersBlob_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/baseball"
+		},
+		"Product_Blob_properties_typeProperties_fileName": {
+			"value": "Product2.csv"
+		},
+		"Product_Blob_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/AW"
+		},
+		"Q_Z_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"Q_Z_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/Q_Z"
+		},
 		"SinkDataset_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Incremental-', pipeline().RunId, '.txt')"
 		},
 		"SinkDataset_properties_typeProperties_folderPath": {
 			"value": "adftutorial/incrementalcopy"
 		},
+		"SourceDataset_cce_properties_typeProperties_fileName": {
+			"value": "customers.json"
+		},
+		"SourceDataset_cce_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData"
+		},
+		"SourceDataset_d2r_properties_typeProperties_fileName": {
+			"value": "Batting.csv"
+		},
+		"SourceDataset_d2r_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/baseball"
+		},
 		"SourceDataset_dia_properties_typeProperties_fileName": {
 			"value": "movies.csv"
 		},
 		"SourceDataset_dia_properties_typeProperties_folderPath": {
 			"value": "demo"
+		},
+		"SourceDataset_hii_properties_typeProperties_fileName": {
+			"value": "Batting.csv"
+		},
+		"SourceDataset_hii_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/baseball"
 		},
 		"SourceDataset_unp_properties_typeProperties_fileName": {
 			"value": "SupplyChain_XA_Files.csv"
@@ -137,6 +302,39 @@
 		"USDOutput_properties_typeProperties_folderPath": {
 			"value": "demo/output/currency"
 		},
+		"adfdropoff_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"adfdropoff_properties_typeProperties_folderPath": {
+			"value": "adfdropoff"
+		},
+		"adfpickup_properties_typeProperties_fileName": {
+			"value": "*.jpg"
+		},
+		"blob_params_properties_typeProperties_fileName": {
+			"value": "params-red.csv"
+		},
+		"blob_params_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData"
+		},
+		"driftout_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"driftout_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/SchemaDriftOut"
+		},
+		"jsonblob_properties_typeProperties_fileName": {
+			"value": "zips.json"
+		},
+		"jsonblob_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData"
+		},
+		"locationMap_properties_typeProperties_fileName": {
+			"value": "locationMap.csv"
+		},
+		"locationMap_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/Soccer"
+		},
 		"movie_dataflow_sink_properties_typeProperties_fileName": {
 			"value": ""
 		},
@@ -148,6 +346,30 @@
 		},
 		"movie_dataflow_source_properties_typeProperties_folderPath": {
 			"value": "demo"
+		},
+		"movies2_properties_typeProperties_fileName": {
+			"value": "movies.csv"
+		},
+		"movies2_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData"
+		},
+		"others_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"others_properties_typeProperties_folderPath": {
+			"value": "mycontainer/output/others"
+		},
+		"salesdrift_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"salesdrift_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/SchemaDrift"
+		},
+		"soccer_events_properties_typeProperties_fileName": {
+			"value": "events.csv"
+		},
+		"soccer_events_properties_typeProperties_folderPath": {
+			"value": "mycontainer/SampleData/Soccer"
 		},
 		"taxi_trip_data_input_properties_typeProperties_fileName": {
 			"value": "trip_data_1.csv"
@@ -170,11 +392,44 @@
 		"AzureBatch_properties_typeProperties_batchUri": {
 			"value": "https://lnbatch.eastus2.batch.azure.com"
 		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://lgnstorage.dfs.core.windows.net"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://makadls001.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_tenant": {
+			"value": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_subscriptionId": {
+			"value": "1e42591f-1f0c-4c5a-b7f2-a268f6105ec5"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_resourceGroupName": {
+			"value": "makbricksadf"
+		},
+		"LNAKV_properties_typeProperties_baseUrl": {
+			"value": "https://lnakv.vault.azure.net/"
+		},
 		"SharePointOData_properties_typeProperties_url": {
 			"value": "https://<mysite>.sharepoint.com/<mysubsite>/_vti_bin/client.svc/web/lists"
 		},
 		"SharePointOData_properties_typeProperties_userName": {
 			"value": "lnewport"
+		},
+		"adlsgen2_properties_typeProperties_url": {
+			"value": "https://lgnstorage2.dfs.core.windows.net"
+		},
+		"linkedService1_properties_typeProperties_userId": {
+			"value": ".\\adfpickup"
+		},
+		"integrationRuntime2_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"value": "makssis002.database.windows.net"
+		},
+		"integrationRuntime2_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"value": "kromerm"
+		},
+		"integrationRuntime2_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"value": ""
 		}
 	}
 }

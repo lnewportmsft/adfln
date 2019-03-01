@@ -26,6 +26,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Misc"
+		},
 		"annotations": [
 			"BatchExecute"
 		]

@@ -2,7 +2,7 @@
 	"name": "Addresses_Blob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "MyAzureBlobLinkedService",
 			"type": "LinkedServiceReference"
 		},
 		"type": "AzureBlob",
@@ -56,7 +56,7 @@
 				"firstRowAsHeader": false
 			},
 			"fileName": "Address.csv",
-			"folderPath": "mycontainer/SampleData/AW"
+			"folderPath": "demo"
 		}
 	}
 }

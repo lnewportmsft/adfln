@@ -1,5 +1,10 @@
 {
 	"name": "DeleteFromBlob",
+	"properties": {
+		"folder": {
+			"name": "Misc"
+		}
+	},
 	"type": "DotNetActivity",
 	"typeProperties": {
 		"assemblyName": "ODSPADFCustomActivity.dll",

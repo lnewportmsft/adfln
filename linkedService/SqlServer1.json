@@ -4,8 +4,12 @@
 	"properties": {
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=False;data source=40.112.183.201;initial catalog=AdventureWorks;user id=adfdemo",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkZJTkFMREFUQUZMT1cwMDFfMWUyZjU2YjctYjdmYS00YTE1LWFjYWEtMjdkMmE4MTMxNjMwIg0KfQ=="
+			"connectionString": "integrated security=False;data source=LGN-P50-1;initial catalog=AdventureWorks2012;user id=lnewport",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2MWFlZWQ2YS0wMmZhLTRmOTItYTlkYS03NDczNzBkOTliZmQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime1",
+			"type": "IntegrationRuntimeReference"
 		}
 	}
 }

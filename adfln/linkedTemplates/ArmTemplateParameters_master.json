@@ -430,6 +430,12 @@
 		},
 		"integrationRuntime2_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
+		},
+		"dfparameters_properties_typeProperties_fileName": {
+			"value": "dfparameters.txt"
+		},
+		"dfparameters_properties_typeProperties_folderPath": {
+			"value": "mycontainer"
 		}
 	}
 }

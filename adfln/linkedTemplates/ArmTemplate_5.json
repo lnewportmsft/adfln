@@ -86,6 +86,14 @@
 		"linkedService1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": ".\\adfpickup"
+		},
+		"dfparameters_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "dfparameters.txt"
+		},
+		"dfparameters_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "mycontainer"
 		}
 	},
 	"variables": {
@@ -596,6 +604,45 @@
 				"connectVia": {
 					"referenceName": "[parameters('integrationRuntime_integrationRuntime1')]",
 					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dfparameters')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MyAzureBlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "key",
+						"type": "String"
+					},
+					{
+						"name": "value",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "=",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": "[parameters('dfparameters_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('dfparameters_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -1393,66 +1440,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBatch')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/invokedPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-07-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "CopyBlobtoBlob",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "AzureBlob1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "CADOutput",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"parameters": {
-					"sourceBlobContainer": {
-						"type": "String"
-					},
-					"sinkBlobContainer": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "PipelineController"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
 		}
 	]
 }

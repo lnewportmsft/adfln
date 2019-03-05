@@ -577,6 +577,14 @@
 		},
 		"integrationRuntime2_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"dfparameters_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "dfparameters.txt"
+		},
+		"dfparameters_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "mycontainer"
 		}
 	},
 	"variables": {
@@ -685,8 +693,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/Baseball 1 Norm Batting Stats')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]",
-				"[concat(variables('factoryId'), '/linkedServices/MyDataBricksLinkedService')]"
+				"[concat(variables('factoryId'), '/linkedServices/MyDataBricksLinkedService')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{
@@ -705,7 +713,8 @@
 								"referenceName": "My Incremental Pipeline",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					},
 					{
@@ -725,7 +734,8 @@
 								"referenceName": "Currency Converter",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					},
 					{
@@ -1826,6 +1836,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Data Flow Demos"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -9082,6 +9095,47 @@
 				"[concat(variables('factoryId'), '/datasets/soccer_events')]",
 				"[concat(variables('factoryId'), '/datasets/locationMap')]",
 				"[concat(variables('factoryId'), '/datasets/driftout')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dfparameters')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-07-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MyAzureBlobLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "key",
+						"type": "String"
+					},
+					{
+						"name": "value",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "=",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": "[parameters('dfparameters_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('dfparameters_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MyAzureBlobLinkedService')]"
 			]
 		}
 	]

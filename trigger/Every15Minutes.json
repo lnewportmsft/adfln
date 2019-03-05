@@ -1,0 +1,15 @@
+{
+	"name": "Every15Minutes",
+	"properties": {
+		"runtimeState": "Stopped",
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2019-03-05T19:46:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

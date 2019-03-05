@@ -1,0 +1,35 @@
+{
+	"name": "dfparameters",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MyAzureBlobLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "key",
+				"type": "String"
+			},
+			{
+				"name": "value",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "=",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"fileName": "dfparameters.txt",
+			"folderPath": "mycontainer"
+		}
+	}
+}

@@ -1,11 +1,17 @@
 {
 	"name": "Every15Minutes",
 	"properties": {
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
 					"referenceName": "IncrementalCopyPipeline",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "GetTableListAndTriggerCopyData",
 					"type": "PipelineReference"
 				}
 			}

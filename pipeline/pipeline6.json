@@ -16,6 +16,10 @@
 					"dataflow": {
 						"referenceName": "Baseball 1 Basic Stats",
 						"type": "DataFlowReference"
+					},
+					"linkedService": {
+						"referenceName": "MyDataBricksLinkedService",
+						"type": "LinkedServiceReference"
 					}
 				}
 			}

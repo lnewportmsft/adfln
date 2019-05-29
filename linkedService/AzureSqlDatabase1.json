@@ -4,8 +4,8 @@
 	"properties": {
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=lnewport.database.windows.net;initial catalog=spatial;user id=lnewport",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkFERkxOXzYwNjZhZTUyLTUwZGQtNDJkMS04MjNlLWE2MWY5MDdlY2E0OCINCn0="
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=lnewport.database.windows.net;initial catalog=AdventureWorksLT;user id=lnewport",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkFERkxOXzEzMjE2OTAzLWIwMzEtNDQ3Yy1hNjkyLTU4M2JhZTZiN2U4ZCINCn0="
 		}
 	}
 }

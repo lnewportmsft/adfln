@@ -5,6 +5,7 @@
 			{
 				"name": "Copy Data1",
 				"type": "Copy",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,14 +13,21 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "BlobSource",
 						"recursive": true
 					},
 					"sink": {
-						"type": "BlobSink",
-						"copyBehavior": "MergeFiles"
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
 					},
 					"enableStaging": false,
 					"parallelCopies": 32,
@@ -33,7 +41,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureBlobTaxi",
+						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					}
 				]
@@ -41,7 +49,8 @@
 		],
 		"folder": {
 			"name": "Copy Demos"
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
